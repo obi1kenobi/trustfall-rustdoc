@@ -6,5 +6,5 @@ mod versioned;
 
 pub use {
     parser::load_rustdoc,
-    versioned::{make_adapter, VersionedCrate, VersionedIndexedCrate, VersionedRustdocAdapter},
+    versioned::{VersionedCrate, VersionedIndexedCrate, VersionedRustdocAdapter},
 };
