@@ -529,18 +529,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "trustfall-rustdoc"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "serde",
- "serde_json",
- "trustfall-rustdoc-adapter 16.0.1",
- "trustfall-rustdoc-adapter 21.0.1",
- "trustfall_core",
-]
-
-[[package]]
 name = "trustfall-rustdoc-adapter"
 version = "16.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -593,6 +581,18 @@ dependencies = [
  "quote",
  "syn",
  "walkdir",
+]
+
+[[package]]
+name = "trustfall_rustdoc"
+version = "0.1.1"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "trustfall-rustdoc-adapter 16.0.1",
+ "trustfall-rustdoc-adapter 21.0.1",
+ "trustfall_core",
 ]
 
 [[package]]
