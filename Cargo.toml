@@ -2,6 +2,11 @@
 name = "trustfall-rustdoc"
 version = "0.0.1"
 edition = "2021"
+authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
+license = "Apache-2.0 OR MIT"
+description = "Run Trustfall queries across multiple rustdoc JSON format versions."
+repository = "https://github.com/obi1kenobi/trustfall-rustdoc"
+readme = "./README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
