@@ -57,6 +57,13 @@ pub fn load_rustdoc(path: &Path) -> anyhow::Result<VersionedCrate> {
             format_version,
         )?)),
 
+        #[cfg(feature = "v22")]
+        22 => Ok(VersionedCrate::V22(parse_or_report_error(
+            path,
+            &file_data,
+            format_version,
+        )?)),
+
         _ => bail!(
             "rustdoc format v{format_version} for file {} is not supported",
             path.display()

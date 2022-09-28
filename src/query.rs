@@ -73,10 +73,18 @@ impl<'a> VersionedRustdocAdapter<'a> {
     ) -> Result<Box<dyn Iterator<Item = QueryResult> + 'a>, QueryError> {
         let (parsed_query, parsed_vars) = get_parsed_query_and_args(self.schema(), query, vars)?;
         match self {
+            #[cfg(feature = "v16")]
             VersionedRustdocAdapter::V16(_, adapter) => {
                 interpret_ir(adapter.clone(), parsed_query, parsed_vars).map_err(|e| e.into())
             }
+
+            #[cfg(feature = "v21")]
             VersionedRustdocAdapter::V21(_, adapter) => {
+                interpret_ir(adapter.clone(), parsed_query, parsed_vars).map_err(|e| e.into())
+            }
+
+            #[cfg(feature = "v22")]
+            VersionedRustdocAdapter::V22(_, adapter) => {
                 interpret_ir(adapter.clone(), parsed_query, parsed_vars).map_err(|e| e.into())
             }
         }
