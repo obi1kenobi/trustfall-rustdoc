@@ -50,6 +50,16 @@ pub enum VersionedRustdocAdapter<'a> {
 }
 
 impl VersionedCrate {
+    pub fn crate_version(&self) -> Option<&str> {
+        match self {
+            #[cfg(feature = "v16")]
+            VersionedCrate::V16(c) => c.crate_version.as_deref(),
+
+            #[cfg(feature = "v21")]
+            VersionedCrate::V21(c) => c.crate_version.as_deref(),
+        }
+    }
+
     add_version_method!();
 }
 
