@@ -191,9 +191,14 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
     pub fn schema(&self) -> &Schema {
         match self {
-            VersionedRustdocAdapter::V16(schema, ..)
-            | VersionedRustdocAdapter::V21(schema, ..)
-            | VersionedRustdocAdapter::V22(schema, ..) => schema,
+            #[cfg(feature = "v16")]
+            VersionedRustdocAdapter::V16(schema, ..) => schema,
+
+            #[cfg(feature = "v21")]
+            VersionedRustdocAdapter::V21(schema, ..) => schema,
+
+            #[cfg(feature = "v22")]
+            VersionedRustdocAdapter::V22(schema, ..) => schema,
         }
     }
 
