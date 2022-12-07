@@ -87,6 +87,11 @@ impl<'a> VersionedRustdocAdapter<'a> {
             VersionedRustdocAdapter::V22(_, adapter) => {
                 interpret_ir(adapter.clone(), parsed_query, parsed_vars).map_err(|e| e.into())
             }
+
+            #[cfg(feature = "v23")]
+            VersionedRustdocAdapter::V23(_, adapter) => {
+                interpret_ir(adapter.clone(), parsed_query, parsed_vars).map_err(|e| e.into())
+            }
         }
     }
 }
