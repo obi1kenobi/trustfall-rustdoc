@@ -104,6 +104,9 @@ jobs:
       - name: test rustdoc v23
         run: cargo test --no-default-features --features v23
 
+      - name: test rustdoc v24
+        run: cargo test --no-default-features --features v24
+
   publish:
     name: Publish to crates.io
     runs-on: ubuntu-latest
