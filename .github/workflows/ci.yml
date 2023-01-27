@@ -82,6 +82,9 @@ jobs:
       - name: test rustdoc v22
         run: cargo test --no-default-features --features v22
 
+      - name: test rustdoc v23
+        run: cargo test --no-default-features --features v23
+
       - name: test rustdoc v24
         run: cargo test --no-default-features --features v24
 

@@ -1,6 +1,6 @@
 [package]
 name = "trustfall_rustdoc"
-version = "0.8.0"
+version = "0.8.1"
 edition = "2021"
 authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
 license = "Apache-2.0 OR MIT"
@@ -17,10 +17,12 @@ serde = { version = "1.0.145", features = ["derive"] }
 trustfall_core = "0.1.1"
 trustfall-rustdoc-adapter-v21 = { package = "trustfall-rustdoc-adapter", version = ">=21.5.0,<21.6.0", optional = true }
 trustfall-rustdoc-adapter-v22 = { package = "trustfall-rustdoc-adapter", version = ">=22.5.0,<22.6.0", optional = true }
+trustfall-rustdoc-adapter-v23 = { package = "trustfall-rustdoc-adapter", version = ">=23.2.0,<23.3.0", optional = true }
 trustfall-rustdoc-adapter-v24 = { package = "trustfall-rustdoc-adapter", version = ">=24.1.0,<24.2.0", optional = true }
 
 [features]
-default = ["v21", "v22", "v24"]
+default = ["v21", "v22", "v23", "v24"]
 v21 = ["dep:trustfall-rustdoc-adapter-v21"]
 v22 = ["dep:trustfall-rustdoc-adapter-v22"]
+v23 = ["dep:trustfall-rustdoc-adapter-v23"]
 v24 = ["dep:trustfall-rustdoc-adapter-v24"]
