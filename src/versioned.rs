@@ -7,17 +7,11 @@ macro_rules! add_version_method {
     () => {
         pub fn version(&self) -> u32 {
             match self {
-                #[cfg(feature = "v16")]
-                Self::V16(..) => 16,
-
                 #[cfg(feature = "v21")]
                 Self::V21(..) => 21,
 
                 #[cfg(feature = "v22")]
                 Self::V22(..) => 22,
-
-                #[cfg(feature = "v23")]
-                Self::V23(..) => 23,
 
                 #[cfg(feature = "v24")]
                 Self::V24(..) => 24,
@@ -29,17 +23,11 @@ macro_rules! add_version_method {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum VersionedCrate {
-    #[cfg(feature = "v16")]
-    V16(trustfall_rustdoc_adapter_v16::Crate),
-
     #[cfg(feature = "v21")]
     V21(trustfall_rustdoc_adapter_v21::Crate),
 
     #[cfg(feature = "v22")]
     V22(trustfall_rustdoc_adapter_v22::Crate),
-
-    #[cfg(feature = "v23")]
-    V23(trustfall_rustdoc_adapter_v23::Crate),
 
     #[cfg(feature = "v24")]
     V24(trustfall_rustdoc_adapter_v24::Crate),
@@ -48,17 +36,11 @@ pub enum VersionedCrate {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum VersionedIndexedCrate<'a> {
-    #[cfg(feature = "v16")]
-    V16(trustfall_rustdoc_adapter_v16::IndexedCrate<'a>),
-
     #[cfg(feature = "v21")]
     V21(trustfall_rustdoc_adapter_v21::IndexedCrate<'a>),
 
     #[cfg(feature = "v22")]
     V22(trustfall_rustdoc_adapter_v22::IndexedCrate<'a>),
-
-    #[cfg(feature = "v23")]
-    V23(trustfall_rustdoc_adapter_v23::IndexedCrate<'a>),
 
     #[cfg(feature = "v24")]
     V24(trustfall_rustdoc_adapter_v24::IndexedCrate<'a>),
@@ -66,12 +48,6 @@ pub enum VersionedIndexedCrate<'a> {
 
 #[non_exhaustive]
 pub enum VersionedRustdocAdapter<'a> {
-    #[cfg(feature = "v16")]
-    V16(
-        Schema,
-        Rc<RefCell<trustfall_rustdoc_adapter_v16::RustdocAdapter<'a>>>,
-    ),
-
     #[cfg(feature = "v21")]
     V21(
         Schema,
@@ -84,12 +60,6 @@ pub enum VersionedRustdocAdapter<'a> {
         Rc<RefCell<trustfall_rustdoc_adapter_v22::RustdocAdapter<'a>>>,
     ),
 
-    #[cfg(feature = "v23")]
-    V23(
-        Schema,
-        Rc<RefCell<trustfall_rustdoc_adapter_v23::RustdocAdapter<'a>>>,
-    ),
-
     #[cfg(feature = "v24")]
     V24(
         Schema,
@@ -100,17 +70,11 @@ pub enum VersionedRustdocAdapter<'a> {
 impl VersionedCrate {
     pub fn crate_version(&self) -> Option<&str> {
         match self {
-            #[cfg(feature = "v16")]
-            VersionedCrate::V16(c) => c.crate_version.as_deref(),
-
             #[cfg(feature = "v21")]
             VersionedCrate::V21(c) => c.crate_version.as_deref(),
 
             #[cfg(feature = "v22")]
             VersionedCrate::V22(c) => c.crate_version.as_deref(),
-
-            #[cfg(feature = "v23")]
-            VersionedCrate::V23(c) => c.crate_version.as_deref(),
 
             #[cfg(feature = "v24")]
             VersionedCrate::V24(c) => c.crate_version.as_deref(),
@@ -123,11 +87,6 @@ impl VersionedCrate {
 impl<'a> VersionedIndexedCrate<'a> {
     pub fn new(crate_: &'a VersionedCrate) -> Self {
         match &crate_ {
-            #[cfg(feature = "v16")]
-            VersionedCrate::V16(c) => {
-                Self::V16(trustfall_rustdoc_adapter_v16::IndexedCrate::new(c))
-            }
-
             #[cfg(feature = "v21")]
             VersionedCrate::V21(c) => {
                 Self::V21(trustfall_rustdoc_adapter_v21::IndexedCrate::new(c))
@@ -136,11 +95,6 @@ impl<'a> VersionedIndexedCrate<'a> {
             #[cfg(feature = "v22")]
             VersionedCrate::V22(c) => {
                 Self::V22(trustfall_rustdoc_adapter_v22::IndexedCrate::new(c))
-            }
-
-            #[cfg(feature = "v23")]
-            VersionedCrate::V23(c) => {
-                Self::V23(trustfall_rustdoc_adapter_v23::IndexedCrate::new(c))
             }
 
             #[cfg(feature = "v24")]
@@ -159,28 +113,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
         baseline: Option<&'a VersionedIndexedCrate>,
     ) -> anyhow::Result<Self> {
         match (current, baseline) {
-            #[cfg(feature = "v16")]
-            (VersionedIndexedCrate::V16(c), Some(VersionedIndexedCrate::V16(b))) => {
-                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v16::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
-                Ok(VersionedRustdocAdapter::V16(
-                    trustfall_rustdoc_adapter_v16::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
-            #[cfg(feature = "v16")]
-            (VersionedIndexedCrate::V16(c), None) => {
-                let adapter =
-                    make_rc_refcell(trustfall_rustdoc_adapter_v16::RustdocAdapter::new(c, None));
-                Ok(VersionedRustdocAdapter::V16(
-                    trustfall_rustdoc_adapter_v16::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
             #[cfg(feature = "v21")]
             (VersionedIndexedCrate::V21(c), Some(VersionedIndexedCrate::V21(b))) => {
                 let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v21::RustdocAdapter::new(
@@ -225,28 +157,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 ))
             }
 
-            #[cfg(feature = "v23")]
-            (VersionedIndexedCrate::V23(c), Some(VersionedIndexedCrate::V23(b))) => {
-                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
-                Ok(VersionedRustdocAdapter::V23(
-                    trustfall_rustdoc_adapter_v23::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
-            #[cfg(feature = "v23")]
-            (VersionedIndexedCrate::V23(c), None) => {
-                let adapter =
-                    make_rc_refcell(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(c, None));
-                Ok(VersionedRustdocAdapter::V23(
-                    trustfall_rustdoc_adapter_v23::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
             #[cfg(feature = "v24")]
             (VersionedIndexedCrate::V24(c), Some(VersionedIndexedCrate::V24(b))) => {
                 let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v24::RustdocAdapter::new(
@@ -281,17 +191,11 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
     pub fn schema(&self) -> &Schema {
         match self {
-            #[cfg(feature = "v16")]
-            VersionedRustdocAdapter::V16(schema, ..) => schema,
-
             #[cfg(feature = "v21")]
             VersionedRustdocAdapter::V21(schema, ..) => schema,
 
             #[cfg(feature = "v22")]
             VersionedRustdocAdapter::V22(schema, ..) => schema,
-
-            #[cfg(feature = "v23")]
-            VersionedRustdocAdapter::V23(schema, ..) => schema,
 
             #[cfg(feature = "v24")]
             VersionedRustdocAdapter::V24(schema, ..) => schema,

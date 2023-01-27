@@ -43,13 +43,6 @@ pub fn load_rustdoc(path: &Path) -> anyhow::Result<VersionedCrate> {
     let format_version = detect_rustdoc_format_version(path, &file_data)?;
 
     match format_version {
-        #[cfg(feature = "v16")]
-        16 => Ok(VersionedCrate::V16(parse_or_report_error(
-            path,
-            &file_data,
-            format_version,
-        )?)),
-
         #[cfg(feature = "v21")]
         21 => Ok(VersionedCrate::V21(parse_or_report_error(
             path,
@@ -59,13 +52,6 @@ pub fn load_rustdoc(path: &Path) -> anyhow::Result<VersionedCrate> {
 
         #[cfg(feature = "v22")]
         22 => Ok(VersionedCrate::V22(parse_or_report_error(
-            path,
-            &file_data,
-            format_version,
-        )?)),
-
-        #[cfg(feature = "v23")]
-        23 => Ok(VersionedCrate::V23(parse_or_report_error(
             path,
             &file_data,
             format_version,
