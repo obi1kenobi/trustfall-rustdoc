@@ -13,6 +13,9 @@ macro_rules! add_version_method {
                 #[cfg(feature = "v22")]
                 Self::V22(..) => 22,
 
+                #[cfg(feature = "v23")]
+                Self::V23(..) => 23,
+
                 #[cfg(feature = "v24")]
                 Self::V24(..) => 24,
             }
@@ -29,6 +32,9 @@ pub enum VersionedCrate {
     #[cfg(feature = "v22")]
     V22(trustfall_rustdoc_adapter_v22::Crate),
 
+    #[cfg(feature = "v23")]
+    V23(trustfall_rustdoc_adapter_v23::Crate),
+
     #[cfg(feature = "v24")]
     V24(trustfall_rustdoc_adapter_v24::Crate),
 }
@@ -41,6 +47,9 @@ pub enum VersionedIndexedCrate<'a> {
 
     #[cfg(feature = "v22")]
     V22(trustfall_rustdoc_adapter_v22::IndexedCrate<'a>),
+
+    #[cfg(feature = "v23")]
+    V23(trustfall_rustdoc_adapter_v23::IndexedCrate<'a>),
 
     #[cfg(feature = "v24")]
     V24(trustfall_rustdoc_adapter_v24::IndexedCrate<'a>),
@@ -60,6 +69,12 @@ pub enum VersionedRustdocAdapter<'a> {
         Rc<RefCell<trustfall_rustdoc_adapter_v22::RustdocAdapter<'a>>>,
     ),
 
+    #[cfg(feature = "v23")]
+    V23(
+        Schema,
+        Rc<RefCell<trustfall_rustdoc_adapter_v23::RustdocAdapter<'a>>>,
+    ),
+
     #[cfg(feature = "v24")]
     V24(
         Schema,
@@ -75,6 +90,9 @@ impl VersionedCrate {
 
             #[cfg(feature = "v22")]
             VersionedCrate::V22(c) => c.crate_version.as_deref(),
+
+            #[cfg(feature = "v23")]
+            VersionedCrate::V23(c) => c.crate_version.as_deref(),
 
             #[cfg(feature = "v24")]
             VersionedCrate::V24(c) => c.crate_version.as_deref(),
@@ -95,6 +113,11 @@ impl<'a> VersionedIndexedCrate<'a> {
             #[cfg(feature = "v22")]
             VersionedCrate::V22(c) => {
                 Self::V22(trustfall_rustdoc_adapter_v22::IndexedCrate::new(c))
+            }
+
+            #[cfg(feature = "v23")]
+            VersionedCrate::V23(c) => {
+                Self::V23(trustfall_rustdoc_adapter_v23::IndexedCrate::new(c))
             }
 
             #[cfg(feature = "v24")]
@@ -157,6 +180,28 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 ))
             }
 
+            #[cfg(feature = "v23")]
+            (VersionedIndexedCrate::V23(c), Some(VersionedIndexedCrate::V23(b))) => {
+                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(
+                    c,
+                    Some(b),
+                ));
+                Ok(VersionedRustdocAdapter::V23(
+                    trustfall_rustdoc_adapter_v23::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
+            #[cfg(feature = "v23")]
+            (VersionedIndexedCrate::V23(c), None) => {
+                let adapter =
+                    make_rc_refcell(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(c, None));
+                Ok(VersionedRustdocAdapter::V23(
+                    trustfall_rustdoc_adapter_v23::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
             #[cfg(feature = "v24")]
             (VersionedIndexedCrate::V24(c), Some(VersionedIndexedCrate::V24(b))) => {
                 let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v24::RustdocAdapter::new(
@@ -196,6 +241,9 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v22")]
             VersionedRustdocAdapter::V22(schema, ..) => schema,
+
+            #[cfg(feature = "v23")]
+            VersionedRustdocAdapter::V23(schema, ..) => schema,
 
             #[cfg(feature = "v24")]
             VersionedRustdocAdapter::V24(schema, ..) => schema,
