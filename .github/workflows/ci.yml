@@ -44,12 +44,9 @@ jobs:
           persist-credentials: false
 
       - name: Install rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           components: rustfmt, clippy
-          profile: minimal
-          override: true
 
       - uses: Swatinem/rust-cache@v2
 
@@ -79,11 +76,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
+      - uses: dtolnay/rust-toolchain@stable
 
       - uses: Swatinem/rust-cache@v2
 
@@ -129,6 +122,8 @@ jobs:
           git tag "v$CURRENT_VERSION"
           git push origin "v$CURRENT_VERSION"
 
+      - uses: dtolnay/rust-toolchain@stable
+
       - name: Publish
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
@@ -152,9 +147,9 @@ jobs:
           export EXIT_CODE="$?"
           set -e
           if [[ "$EXIT_CODE" == "7" ]]; then
-            echo '::set-output name=is_new_version::no'
+            echo "is_new_version=no" >> $GITHUB_OUTPUT
           elif [[ "$EXIT_CODE" == "0" ]]; then
-            echo '::set-output name=is_new_version::yes'
+            echo "is_new_version=yes" >> $GITHUB_OUTPUT
           else
             # Unexpected outcome, indicates a bug.
             exit "$EXIT_CODE"
