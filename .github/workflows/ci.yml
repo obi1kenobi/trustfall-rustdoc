@@ -87,12 +87,9 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
-      # Test all features all at once
+      # Compile all features all at once
       - name: compile all features
         run: cargo test --no-run --all-features
-
-      - name: test all features
-        run: cargo test --all-features
 
       # Test features individually
       - name: test rustdoc v21
@@ -106,6 +103,10 @@ jobs:
 
       - name: test rustdoc v24
         run: cargo test --no-default-features --features v24
+
+      # Test all features at once; keep this last for caching purposes.
+      - name: test all features
+        run: cargo test --all-features
 
   publish:
     name: Publish to crates.io
