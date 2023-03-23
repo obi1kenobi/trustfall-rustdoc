@@ -22,9 +22,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.65"
+version = "1.0.70"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98161a4e3e2184da77bb14f02184cdd111e83bbbcc9979dfee3c44b9a85f5602"
+checksum = "7de8ce5e0f9f8d88245311066a578d72b7af3e7088f32783804676302df237e4"
 
 [[package]]
 name = "async-graphql-parser"
@@ -79,15 +79,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bstr"
-version = "0.2.17"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba3569f383e8f1598449f1a423e72e99569137b47740b1da11ef19af3d5c3223"
-dependencies = [
- "memchr",
-]
-
-[[package]]
 name = "bumpalo"
 version = "3.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -101,12 +92,6 @@ checksum = "ec8a7b6a70fde80372154c65702f00a0f56f3e1c36abbc6c440484be248856db"
 dependencies = [
  "serde",
 ]
-
-[[package]]
-name = "camino"
-version = "1.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88ad0e1e3e88dd237a156ab9f571021b8a158caa0ae44b1968a241efb5144c1e"
 
 [[package]]
 name = "cfg-if"
@@ -172,12 +157,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "90e5c1c8368803113bf0c9584fc495a58b86dc8a29edbf8fe877d21d9507e797"
 
 [[package]]
-name = "fnv"
-version = "1.0.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
-
-[[package]]
 name = "generic-array"
 version = "0.14.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -185,19 +164,6 @@ checksum = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
 dependencies = [
  "typenum",
  "version_check",
-]
-
-[[package]]
-name = "globset"
-version = "0.4.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a1e17342619edbc21a964c2afbeb6c820c6a2560032872f397bb97ea127bd0a"
-dependencies = [
- "aho-corasick",
- "bstr",
- "fnv",
- "log",
- "regex",
 ]
 
 [[package]]
@@ -358,9 +324,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.44"
+version = "1.0.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7bd7356a8122b6c4a24a82b278680c73357984ca2fc79a0f9fa6dea7dced7c58"
+checksum = "ba466839c78239c09faf015484e5cc04860f88242cff4d03eb038f04b4699b73"
 dependencies = [
  "unicode-ident",
 ]
@@ -443,15 +409,6 @@ name = "ryu"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
-
-[[package]]
-name = "same-file"
-version = "1.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
-dependencies = [
- "winapi-util",
-]
 
 [[package]]
 name = "serde"
@@ -547,54 +504,64 @@ dependencies = [
 ]
 
 [[package]]
-name = "trustfall-rustdoc-adapter"
-version = "21.5.0"
+name = "trustfall"
+version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8da6228cdbb2a3bb154aa987e851ab7bafa18c130d5ce83fb6dc74dbb5d3413e"
+checksum = "d08b46bc8870b30f46d288a48cce399f30d08a39b36ab50489eacb851bb81c85"
+dependencies = [
+ "anyhow",
+ "trustfall_core",
+ "trustfall_derive",
+]
+
+[[package]]
+name = "trustfall-rustdoc-adapter"
+version = "21.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd634746bf455c086acef8cdc7cd65264d22bc4bd3d3f78821c48aa797e6c61c"
 dependencies = [
  "rustdoc-types 0.17.0",
- "trustfall_core",
+ "trustfall",
 ]
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "22.5.0"
+version = "22.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "723b2c74116fa55ea088e99fc07314f6db367da02aaa98f97234dd330554b7a1"
+checksum = "f6ddf10fe590c38e8c6d839738ef5f1b14c62b9953a93894cb049ef444639e44"
 dependencies = [
  "rustdoc-types 0.18.0",
- "trustfall_core",
+ "trustfall",
 ]
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "23.2.0"
+version = "23.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "19adac744c50202744a870cf5b108c077178fe7f4370971b866f4229e9bf4c10"
+checksum = "72f3805f2ae0a845f1ea22f679940bd8f01d61d787eed28a6a3fb938c0590307"
 dependencies = [
  "rustdoc-types 0.19.0",
- "trustfall_core",
+ "trustfall",
 ]
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "24.1.0"
+version = "24.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09834eed7a5d5783e022f74451a271c63aa24fb5292a2c346801d048466b3cd0"
+checksum = "f9f8cf64cd925bfc7aa00cb650d83ece2a8569a74d93c4d2a6d7b71d8e6ce4dc"
 dependencies = [
  "rustdoc-types 0.20.0",
- "trustfall_core",
+ "trustfall",
 ]
 
 [[package]]
 name = "trustfall_core"
-version = "0.1.1"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f9270da3f637b107458c4c84a6595a9913aab71fb20a363119d7686e759d11b"
+checksum = "7af71d1100b656a92610b4286ed59d06a1ec175f0933cbe208929456fb7854cb"
 dependencies = [
  "async-graphql-parser",
  "async-graphql-value",
- "camino",
  "chrono",
  "itertools",
  "lazy_static",
@@ -602,37 +569,33 @@ dependencies = [
  "regex",
  "ron",
  "serde",
- "serde_json",
  "smallvec",
  "thiserror",
- "trustfall_filetests_macros",
 ]
 
 [[package]]
-name = "trustfall_filetests_macros"
-version = "0.2.0"
+name = "trustfall_derive"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "709b815561cd5fc1b4a0572ec2e35d16f9ce65895318f147ee3602bbbf6cb24b"
+checksum = "486543a0d60e041e8fdf8595a8a0686173ad0071d07e11d8c228750ab28767df"
 dependencies = [
- "globset",
  "proc-macro2",
  "quote",
  "syn",
- "walkdir",
 ]
 
 [[package]]
 name = "trustfall_rustdoc"
-version = "0.8.2"
+version = "0.9.0"
 dependencies = [
  "anyhow",
  "serde",
  "serde_json",
- "trustfall-rustdoc-adapter 21.5.0",
- "trustfall-rustdoc-adapter 22.5.0",
- "trustfall-rustdoc-adapter 23.2.0",
- "trustfall-rustdoc-adapter 24.1.0",
- "trustfall_core",
+ "trustfall",
+ "trustfall-rustdoc-adapter 21.6.0",
+ "trustfall-rustdoc-adapter 22.6.0",
+ "trustfall-rustdoc-adapter 23.3.0",
+ "trustfall-rustdoc-adapter 24.2.0",
 ]
 
 [[package]]
@@ -658,17 +621,6 @@ name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
-
-[[package]]
-name = "walkdir"
-version = "2.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "808cf2735cd4b6866113f648b791c6adc5714537bc222d9347bb203386ffda56"
-dependencies = [
- "same-file",
- "winapi",
- "winapi-util",
-]
 
 [[package]]
 name = "wasi"
@@ -745,15 +697,6 @@ name = "winapi-i686-pc-windows-gnu"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
-
-[[package]]
-name = "winapi-util"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70ec6ce85bb158151cae5e5c87f95a8e97d2c0c4b001223f33a334e3ce5de178"
-dependencies = [
- "winapi",
-]
 
 [[package]]
 name = "winapi-x86_64-pc-windows-gnu"

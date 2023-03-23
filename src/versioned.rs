@@ -1,7 +1,7 @@
 use std::{cell::RefCell, fmt::Debug, rc::Rc};
 
 use anyhow::bail;
-use trustfall_core::schema::Schema;
+use trustfall::Schema;
 
 macro_rules! add_version_method {
     () => {
