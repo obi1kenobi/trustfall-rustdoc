@@ -115,14 +115,14 @@ jobs:
         with:
           persist-credentials: true
 
+      - uses: dtolnay/rust-toolchain@stable
+
       - name: Tag the version
         run: |
           set -euxo pipefail
           export CURRENT_VERSION="$(./scripts/get_current_version.sh trustfall_rustdoc)"
           git tag "v$CURRENT_VERSION"
           git push origin "v$CURRENT_VERSION"
-
-      - uses: dtolnay/rust-toolchain@stable
 
       - name: Publish
         env:
