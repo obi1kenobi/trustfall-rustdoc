@@ -14,11 +14,11 @@ readme = "./README.md"
 anyhow = "1.0.65"
 serde_json = "1.0.85"
 serde = { version = "1.0.145", features = ["derive"] }
-trustfall_core = { version = "0.3.2", path = "../trustfall/trustfall_core" }
+trustfall_core = { version = "0.4.0-beta.1", path = "../trustfall/trustfall_core" }
 # trustfall-rustdoc-adapter-v21 = { package = "trustfall-rustdoc-adapter", version = ">=21.5.0,<21.6.0", optional = true }
 # trustfall-rustdoc-adapter-v22 = { package = "trustfall-rustdoc-adapter", version = ">=22.5.0,<22.6.0", optional = true }
 # trustfall-rustdoc-adapter-v23 = { package = "trustfall-rustdoc-adapter", version = ">=23.2.0,<23.3.0", optional = true }
-trustfall-rustdoc-adapter-v24 = { package = "trustfall-rustdoc-adapter", path = "../trustfall-rustdoc-adapter", version = ">=24.1.0,<24.2.0", optional = true }
+trustfall-rustdoc-adapter-v24 = { package = "trustfall-rustdoc-adapter", path = "../trustfall-rustdoc-adapter", version = ">=24.2.0,<24.3.0", optional = true }
 
 [features]
 default = ["v24"]

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use trustfall_core::{
     frontend::{error::FrontendError, parse},
     interpreter::{error::QueryArgumentsError, execution::interpret_ir},
-    ir::{indexed::IndexedQuery, FieldValue},
+    ir::{IndexedQuery, FieldValue},
     schema::Schema,
 };
 

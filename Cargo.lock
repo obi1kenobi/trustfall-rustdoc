@@ -22,9 +22,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.65"
+version = "1.0.70"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98161a4e3e2184da77bb14f02184cdd111e83bbbcc9979dfee3c44b9a85f5602"
+checksum = "7de8ce5e0f9f8d88245311066a578d72b7af3e7088f32783804676302df237e4"
 
 [[package]]
 name = "async-graphql-parser"
@@ -324,9 +324,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.44"
+version = "1.0.56"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7bd7356a8122b6c4a24a82b278680c73357984ca2fc79a0f9fa6dea7dced7c58"
+checksum = "2b63bdb0cd06f1f4dedf69b254734f9b45af66e4a031e42a7480257d9898b435"
 dependencies = [
  "unicode-ident",
 ]
@@ -477,16 +477,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "trustfall"
+version = "0.4.0-beta.1"
+dependencies = [
+ "anyhow",
+ "trustfall_core",
+ "trustfall_derive",
+]
+
+[[package]]
 name = "trustfall-rustdoc-adapter"
-version = "24.1.1"
+version = "24.2.0"
 dependencies = [
  "rustdoc-types",
- "trustfall_core",
+ "trustfall",
 ]
 
 [[package]]
 name = "trustfall_core"
-version = "0.3.2"
+version = "0.4.0-beta.1"
 dependencies = [
  "async-graphql-parser",
  "async-graphql-value",
@@ -499,6 +508,15 @@ dependencies = [
  "serde",
  "smallvec",
  "thiserror",
+]
+
+[[package]]
+name = "trustfall_derive"
+version = "0.3.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
