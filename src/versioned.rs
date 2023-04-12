@@ -1,4 +1,4 @@
-use std::{cell::RefCell, fmt::Debug, rc::Rc};
+use std::{fmt::Debug, rc::Rc};
 
 use anyhow::bail;
 use trustfall::Schema;
@@ -60,25 +60,25 @@ pub enum VersionedRustdocAdapter<'a> {
     #[cfg(feature = "v21")]
     V21(
         Schema,
-        Rc<RefCell<trustfall_rustdoc_adapter_v21::RustdocAdapter<'a>>>,
+        Rc<trustfall_rustdoc_adapter_v21::RustdocAdapter<'a>>,
     ),
 
     #[cfg(feature = "v22")]
     V22(
         Schema,
-        Rc<RefCell<trustfall_rustdoc_adapter_v22::RustdocAdapter<'a>>>,
+        Rc<trustfall_rustdoc_adapter_v22::RustdocAdapter<'a>>,
     ),
 
     #[cfg(feature = "v23")]
     V23(
         Schema,
-        Rc<RefCell<trustfall_rustdoc_adapter_v23::RustdocAdapter<'a>>>,
+        Rc<trustfall_rustdoc_adapter_v23::RustdocAdapter<'a>>,
     ),
 
     #[cfg(feature = "v24")]
     V24(
         Schema,
-        Rc<RefCell<trustfall_rustdoc_adapter_v24::RustdocAdapter<'a>>>,
+        Rc<trustfall_rustdoc_adapter_v24::RustdocAdapter<'a>>,
     ),
 }
 
@@ -138,7 +138,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
         match (current, baseline) {
             #[cfg(feature = "v21")]
             (VersionedIndexedCrate::V21(c), Some(VersionedIndexedCrate::V21(b))) => {
-                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v21::RustdocAdapter::new(
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v21::RustdocAdapter::new(
                     c,
                     Some(b),
                 ));
@@ -150,8 +150,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v21")]
             (VersionedIndexedCrate::V21(c), None) => {
-                let adapter =
-                    make_rc_refcell(trustfall_rustdoc_adapter_v21::RustdocAdapter::new(c, None));
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v21::RustdocAdapter::new(c, None));
                 Ok(VersionedRustdocAdapter::V21(
                     trustfall_rustdoc_adapter_v21::RustdocAdapter::schema(),
                     adapter,
@@ -160,7 +159,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v22")]
             (VersionedIndexedCrate::V22(c), Some(VersionedIndexedCrate::V22(b))) => {
-                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v22::RustdocAdapter::new(
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v22::RustdocAdapter::new(
                     c,
                     Some(b),
                 ));
@@ -172,8 +171,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v22")]
             (VersionedIndexedCrate::V22(c), None) => {
-                let adapter =
-                    make_rc_refcell(trustfall_rustdoc_adapter_v22::RustdocAdapter::new(c, None));
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v22::RustdocAdapter::new(c, None));
                 Ok(VersionedRustdocAdapter::V22(
                     trustfall_rustdoc_adapter_v22::RustdocAdapter::schema(),
                     adapter,
@@ -182,7 +180,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v23")]
             (VersionedIndexedCrate::V23(c), Some(VersionedIndexedCrate::V23(b))) => {
-                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(
                     c,
                     Some(b),
                 ));
@@ -194,8 +192,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v23")]
             (VersionedIndexedCrate::V23(c), None) => {
-                let adapter =
-                    make_rc_refcell(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(c, None));
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v23::RustdocAdapter::new(c, None));
                 Ok(VersionedRustdocAdapter::V23(
                     trustfall_rustdoc_adapter_v23::RustdocAdapter::schema(),
                     adapter,
@@ -204,7 +201,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v24")]
             (VersionedIndexedCrate::V24(c), Some(VersionedIndexedCrate::V24(b))) => {
-                let adapter = make_rc_refcell(trustfall_rustdoc_adapter_v24::RustdocAdapter::new(
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v24::RustdocAdapter::new(
                     c,
                     Some(b),
                 ));
@@ -216,8 +213,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v24")]
             (VersionedIndexedCrate::V24(c), None) => {
-                let adapter =
-                    make_rc_refcell(trustfall_rustdoc_adapter_v24::RustdocAdapter::new(c, None));
+                let adapter = Rc::new(trustfall_rustdoc_adapter_v24::RustdocAdapter::new(c, None));
                 Ok(VersionedRustdocAdapter::V24(
                     trustfall_rustdoc_adapter_v24::RustdocAdapter::schema(),
                     adapter,
@@ -251,8 +247,4 @@ impl<'a> VersionedRustdocAdapter<'a> {
     }
 
     add_version_method!();
-}
-
-fn make_rc_refcell<T>(value: T) -> Rc<RefCell<T>> {
-    Rc::new(RefCell::new(value))
 }
