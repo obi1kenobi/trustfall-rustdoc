@@ -93,6 +93,9 @@ jobs:
       - name: test rustdoc v24
         run: cargo test --no-default-features --features v24
 
+      - name: test rustdoc v25
+        run: cargo test --no-default-features --features v25
+
       # Test all features at once; keep this last for caching purposes.
       - name: test all features
         run: cargo test --all-features
@@ -165,4 +168,4 @@ jobs:
           persist-credentials: false
 
       - name: Check semver
-        uses: obi1kenobi/cargo-semver-checks-action@v1
+        uses: obi1kenobi/cargo-semver-checks-action@v2
