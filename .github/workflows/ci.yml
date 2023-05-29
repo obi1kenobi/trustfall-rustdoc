@@ -96,6 +96,9 @@ jobs:
       - name: test rustdoc v25
         run: cargo test --no-default-features --features v25
 
+      - name: test rustdoc v26
+        run: cargo test --no-default-features --features v26
+
       # Test all features at once; keep this last for caching purposes.
       - name: test all features
         run: cargo test --all-features
