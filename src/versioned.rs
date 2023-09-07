@@ -15,6 +15,9 @@ macro_rules! add_version_method {
 
                 #[cfg(feature = "v26")]
                 Self::V26(..) => 26,
+
+                #[cfg(feature = "v27")]
+                Self::V27(..) => 27,
             }
         }
     };
@@ -31,6 +34,9 @@ pub enum VersionedCrate {
 
     #[cfg(feature = "v26")]
     V26(trustfall_rustdoc_adapter_v26::Crate),
+
+    #[cfg(feature = "v27")]
+    V27(trustfall_rustdoc_adapter_v27::Crate),
 }
 
 #[non_exhaustive]
@@ -44,6 +50,9 @@ pub enum VersionedIndexedCrate<'a> {
 
     #[cfg(feature = "v26")]
     V26(trustfall_rustdoc_adapter_v26::IndexedCrate<'a>),
+
+    #[cfg(feature = "v27")]
+    V27(trustfall_rustdoc_adapter_v27::IndexedCrate<'a>),
 }
 
 #[non_exhaustive]
@@ -65,6 +74,12 @@ pub enum VersionedRustdocAdapter<'a> {
         Schema,
         Arc<trustfall_rustdoc_adapter_v26::RustdocAdapter<'a>>,
     ),
+
+    #[cfg(feature = "v27")]
+    V27(
+        Schema,
+        Arc<trustfall_rustdoc_adapter_v27::RustdocAdapter<'a>>,
+    ),
 }
 
 impl VersionedCrate {
@@ -78,6 +93,9 @@ impl VersionedCrate {
 
             #[cfg(feature = "v26")]
             VersionedCrate::V26(c) => c.crate_version.as_deref(),
+
+            #[cfg(feature = "v27")]
+            VersionedCrate::V27(c) => c.crate_version.as_deref(),
         }
     }
 
@@ -100,6 +118,11 @@ impl<'a> VersionedIndexedCrate<'a> {
             #[cfg(feature = "v26")]
             VersionedCrate::V26(c) => {
                 Self::V26(trustfall_rustdoc_adapter_v26::IndexedCrate::new(c))
+            }
+
+            #[cfg(feature = "v27")]
+            VersionedCrate::V27(c) => {
+                Self::V27(trustfall_rustdoc_adapter_v27::IndexedCrate::new(c))
             }
         }
     }
@@ -176,6 +199,27 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 ))
             }
 
+            #[cfg(feature = "v27")]
+            (VersionedIndexedCrate::V27(c), Some(VersionedIndexedCrate::V27(b))) => {
+                let adapter = Arc::new(trustfall_rustdoc_adapter_v27::RustdocAdapter::new(
+                    c,
+                    Some(b),
+                ));
+                Ok(VersionedRustdocAdapter::V27(
+                    trustfall_rustdoc_adapter_v27::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
+            #[cfg(feature = "v27")]
+            (VersionedIndexedCrate::V27(c), None) => {
+                let adapter = Arc::new(trustfall_rustdoc_adapter_v27::RustdocAdapter::new(c, None));
+                Ok(VersionedRustdocAdapter::V27(
+                    trustfall_rustdoc_adapter_v27::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
             (c, Some(b)) => {
                 bail!(
                     "version mismatch between current (v{}) and baseline (v{}) format versions",
@@ -196,6 +240,9 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v26")]
             VersionedRustdocAdapter::V26(schema, ..) => schema,
+
+            #[cfg(feature = "v27")]
+            VersionedRustdocAdapter::V27(schema, ..) => schema,
         }
     }
 
