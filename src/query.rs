@@ -13,16 +13,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
         vars: BTreeMap<K, V>,
     ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
         match self {
-            #[cfg(feature = "v23")]
-            VersionedRustdocAdapter::V23(_, adapter) => {
-                execute_query(self.schema(), adapter.clone(), query, vars)
-            }
-
-            #[cfg(feature = "v24")]
-            VersionedRustdocAdapter::V24(_, adapter) => {
-                execute_query(self.schema(), adapter.clone(), query, vars)
-            }
-
             #[cfg(feature = "v26")]
             VersionedRustdocAdapter::V26(_, adapter) => {
                 execute_query(self.schema(), adapter.clone(), query, vars)
