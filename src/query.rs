@@ -22,6 +22,11 @@ impl<'a> VersionedRustdocAdapter<'a> {
             VersionedRustdocAdapter::V27(_, adapter) => {
                 execute_query(self.schema(), adapter.clone(), query, vars)
             }
+
+            #[cfg(feature = "v28")]
+            VersionedRustdocAdapter::V28(_, adapter) => {
+                execute_query(self.schema(), adapter.clone(), query, vars)
+            }
         }
     }
 }
