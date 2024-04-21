@@ -79,14 +79,14 @@ jobs:
         run: cargo test --no-run --all-features
 
       # Test features individually
-      - name: test rustdoc v26
-        run: cargo test --no-default-features --features v26
-
       - name: test rustdoc v27
         run: cargo test --no-default-features --features v27
 
       - name: test rustdoc v28
         run: cargo test --no-default-features --features v28
+
+      - name: test rustdoc v29
+        run: cargo test --no-default-features --features v29
 
       # Test all features at once; keep this last for caching purposes.
       - name: test all features
