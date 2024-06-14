@@ -1,0 +1,132 @@
+use std::{fmt::Debug, sync::Arc};
+
+use anyhow::bail;
+use trustfall::Schema;
+
+macro_rules! add_version_method {
+    () => {
+        pub fn version(&self) -> u32 {
+            match self {
+                {{#each version_numbers}}
+                #[cfg(feature = "v{{this}}")]
+                Self::V{{this}}(..) => {{this}},
+
+                {{/each}}
+            }
+        }
+    };
+}
+
+#[non_exhaustive]
+#[derive(Debug)]
+pub enum VersionedCrate {
+    {{#each version_numbers}}
+    #[cfg(feature = "v{{this}}")]
+    V{{this}}(trustfall_rustdoc_adapter_v{{this}}::Crate),
+
+    {{/each}}
+}
+
+#[non_exhaustive]
+#[derive(Debug)]
+pub enum VersionedIndexedCrate<'a> {
+    {{#each version_numbers}}
+    #[cfg(feature = "v{{this}}")]
+    V{{this}}(trustfall_rustdoc_adapter_v{{this}}::IndexedCrate<'a>),
+
+    {{/each}}
+}
+
+#[non_exhaustive]
+pub enum VersionedRustdocAdapter<'a> {
+    {{#each version_numbers}}
+    #[cfg(feature = "v{{this}}")]
+    V{{this}}(
+        Schema,
+        Arc<trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter<'a>>,
+    ),
+
+    {{/each}}
+}
+
+impl VersionedCrate {
+    pub fn crate_version(&self) -> Option<&str> {
+        match self {
+            {{#each version_numbers}}
+            #[cfg(feature = "v{{this}}")]
+            VersionedCrate::V{{this}}(c) => c.crate_version.as_deref(),
+
+            {{/each}}
+        }
+    }
+
+    add_version_method!();
+}
+
+impl<'a> VersionedIndexedCrate<'a> {
+    pub fn new(crate_: &'a VersionedCrate) -> Self {
+        match &crate_ {
+            {{#each version_numbers}}
+            #[cfg(feature = "v{{this}}")]
+            VersionedCrate::V{{this}}(c) => {
+                Self::V{{this}}(trustfall_rustdoc_adapter_v{{this}}::IndexedCrate::new(c))
+            }
+
+            {{/each}}
+        }
+    }
+
+    add_version_method!();
+}
+
+impl<'a> VersionedRustdocAdapter<'a> {
+    pub fn new(
+        current: &'a VersionedIndexedCrate,
+        baseline: Option<&'a VersionedIndexedCrate>,
+    ) -> anyhow::Result<Self> {
+        match (current, baseline) {
+            {{#each version_numbers}}
+            #[cfg(feature = "v{{this}}")]
+            (VersionedIndexedCrate::V{{this}}(c), Some(VersionedIndexedCrate::V{{this}}(b))) => {
+                let adapter = Arc::new(trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::new(
+                    c,
+                    Some(b),
+                ));
+                Ok(VersionedRustdocAdapter::V{{this}}(
+                    trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
+            #[cfg(feature = "v{{this}}")]
+            (VersionedIndexedCrate::V{{this}}(c), None) => {
+                let adapter = Arc::new(trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::new(c, None));
+                Ok(VersionedRustdocAdapter::V{{this}}(
+                    trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
+            {{/each}}
+            (c, Some(b)) => {
+                bail!(
+                    "version mismatch between current (v{}) and baseline (v{}) format versions",
+                    c.version(),
+                    b.version()
+                )
+            }
+        }
+    }
+
+    pub fn schema(&self) -> &Schema {
+        match self {
+            {{#each version_numbers}}
+            #[cfg(feature = "v{{this}}")]
+            VersionedRustdocAdapter::V{{this}}(schema, ..) => schema,
+
+            {{/each}}
+        }
+    }
+
+    add_version_method!();
+}
