@@ -1,0 +1,11 @@
+[workspace]
+
+[package]
+name = "generator"
+publish = false
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fs-err = "2.11.0"
+handlebars = "5.1.2"
