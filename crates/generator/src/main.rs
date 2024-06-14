@@ -16,10 +16,10 @@ fn main() {
     args.insert("version_numbers", versions.as_slice());
 
     let template_and_output = [
-        ("../../template/parser.template.rs", "../../src/parser.rs"),
-        ("../../template/query.template.rs", "../../src/query.rs"),
+        ("../../template/parser.rs.template", "../../src/parser.rs"),
+        ("../../template/query.rs.template", "../../src/query.rs"),
         (
-            "../../template/versioned.template.rs",
+            "../../template/versioned.rs.template",
             "../../src/versioned.rs",
         ),
     ];
