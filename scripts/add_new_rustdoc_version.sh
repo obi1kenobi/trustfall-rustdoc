@@ -4,6 +4,15 @@
 # - python
 # - yq
 
+# Usage:
+# - `./add_new_rustdoc_version.sh <number>` to add rustdoc JSON format number explicitly
+# - omit `<number>` to add format `N + 1` if `N` is the current maximum supported format number.
+
+# Preconditions:
+# - a `trustfall-rustdoc-adapter` for the specified new rustdoc format must already be available.
+
+NEXT_VERSION_NUMBER="$1"
+
 # Fail on first error, on undefined variables, and on failures in pipelines.
 set -euo pipefail
 
@@ -15,7 +24,10 @@ CURRENT_VERSIONS="$(yq '.features.default' Cargo.toml -o json | \
     sed 's/,/, /g' | \
     sed 's/\[//g' | \
     sed 's/]//g')"
-NEXT_VERSION_NUMBER="$(yq '.features.default.[-1] | sub("v(\d+)", "${1}") | to_number | (. + 1)' Cargo.toml -o json -r)"
+
+if [[ "$NEXT_VERSION_NUMBER" != "" ]]; then
+    NEXT_VERSION_NUMBER="$(yq '.features.default.[-1] | sub("v(\d+)", "${1}") | to_number | (. + 1)' Cargo.toml -o json -r)"
+fi
 
 ALL_VERSIONS="$(yq '.features.default[] | sub("v(\d+)", "${1}")' Cargo.toml -o json -r) ${NEXT_VERSION_NUMBER}"
 
