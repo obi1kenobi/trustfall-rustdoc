@@ -25,7 +25,7 @@ CURRENT_VERSIONS="$(yq '.features.default' Cargo.toml -o json | \
     sed 's/\[//g' | \
     sed 's/]//g')"
 
-if [[ "$NEXT_VERSION_NUMBER" != "" ]]; then
+if [[ "$NEXT_VERSION_NUMBER" == "" ]]; then
     NEXT_VERSION_NUMBER="$(yq '.features.default.[-1] | sub("v(\d+)", "${1}") | to_number | (. + 1)' Cargo.toml -o json -r)"
 fi
 
