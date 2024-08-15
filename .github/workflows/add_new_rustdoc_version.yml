@@ -38,14 +38,14 @@ jobs:
           wget "https://github.com/mikefarah/yq/releases/download/${VERSION}/yq_linux_amd64" -O yq &&\
             chmod +x ./yq
 
-      - name: add next minor to test matrix
+      - name: codegen new rustdoc format support
         env:
           NEXT_FORMAT: ${{inputs.next-format}}
         run: |
           set -euxo pipefail
           ./scripts/add_new_rustdoc_version.sh "$NEXT_FORMAT"
 
-      - name: upload ci.yml artifact for use in PR
+      - name: upload artifact for use in PR
         uses: actions/upload-artifact@v4
         with:
           name: rustdoc-update
