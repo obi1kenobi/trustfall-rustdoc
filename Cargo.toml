@@ -1,6 +1,6 @@
 [package]
 name = "trustfall_rustdoc"
-version = "0.15.3"
+version = "0.16.0"
 edition = "2021"
 authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
 license = "Apache-2.0 OR MIT"
@@ -15,16 +15,14 @@ anyhow = "1.0.65"
 serde_json = "1.0.85"
 serde = { version = "1.0.145", features = ["derive"] }
 trustfall = "0.7.1"
-trustfall-rustdoc-adapter-v27 = { package = "trustfall-rustdoc-adapter", version = ">=27.1.0,<27.2.0", optional = true }
-trustfall-rustdoc-adapter-v28 = { package = "trustfall-rustdoc-adapter", version = ">=28.0.0,<28.1.0", optional = true }
-trustfall-rustdoc-adapter-v29 = { package = "trustfall-rustdoc-adapter", version = ">=29.0.0,<29.1.0", optional = true }
-trustfall-rustdoc-adapter-v30 = { package = "trustfall-rustdoc-adapter", version = ">=30.0.0,<30.1.0", optional = true }
-trustfall-rustdoc-adapter-v32 = { package = "trustfall-rustdoc-adapter", version = ">=32.0.0,<32.1.0", optional = true }
-trustfall-rustdoc-adapter-v33 = { package = "trustfall-rustdoc-adapter", version = ">=33.0.0,<33.1.0", optional = true }
+trustfall-rustdoc-adapter-v28 = { package = "trustfall-rustdoc-adapter", version = ">=28.1.0,<28.2.0", optional = true }
+trustfall-rustdoc-adapter-v29 = { package = "trustfall-rustdoc-adapter", version = ">=29.1.0,<29.2.0", optional = true }
+trustfall-rustdoc-adapter-v30 = { package = "trustfall-rustdoc-adapter", version = ">=30.1.0,<30.2.0", optional = true }
+trustfall-rustdoc-adapter-v32 = { package = "trustfall-rustdoc-adapter", version = ">=32.1.0,<32.2.0", optional = true }
+trustfall-rustdoc-adapter-v33 = { package = "trustfall-rustdoc-adapter", version = ">=33.1.0,<33.2.0", optional = true }
 
 [features]
-default = ["v27", "v28", "v29", "v30", "v32", "v33"]
-v27 = ["dep:trustfall-rustdoc-adapter-v27"]
+default = ["v28", "v29", "v30", "v32", "v33"]
 v28 = ["dep:trustfall-rustdoc-adapter-v28"]
 v29 = ["dep:trustfall-rustdoc-adapter-v29"]
 v30 = ["dep:trustfall-rustdoc-adapter-v30"]
