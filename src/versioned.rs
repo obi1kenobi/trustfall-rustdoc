@@ -7,9 +7,6 @@ macro_rules! add_version_method {
     () => {
         pub fn version(&self) -> u32 {
             match self {
-                #[cfg(feature = "v27")]
-                Self::V27(..) => 27,
-
                 #[cfg(feature = "v28")]
                 Self::V28(..) => 28,
 
@@ -32,9 +29,6 @@ macro_rules! add_version_method {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum VersionedCrate {
-    #[cfg(feature = "v27")]
-    V27(trustfall_rustdoc_adapter_v27::Crate),
-
     #[cfg(feature = "v28")]
     V28(trustfall_rustdoc_adapter_v28::Crate),
 
@@ -54,9 +48,6 @@ pub enum VersionedCrate {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum VersionedIndexedCrate<'a> {
-    #[cfg(feature = "v27")]
-    V27(trustfall_rustdoc_adapter_v27::IndexedCrate<'a>),
-
     #[cfg(feature = "v28")]
     V28(trustfall_rustdoc_adapter_v28::IndexedCrate<'a>),
 
@@ -75,12 +66,6 @@ pub enum VersionedIndexedCrate<'a> {
 
 #[non_exhaustive]
 pub enum VersionedRustdocAdapter<'a> {
-    #[cfg(feature = "v27")]
-    V27(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v27::RustdocAdapter<'a>>,
-    ),
-
     #[cfg(feature = "v28")]
     V28(
         Schema,
@@ -115,9 +100,6 @@ pub enum VersionedRustdocAdapter<'a> {
 impl VersionedCrate {
     pub fn crate_version(&self) -> Option<&str> {
         match self {
-            #[cfg(feature = "v27")]
-            VersionedCrate::V27(c) => c.crate_version.as_deref(),
-
             #[cfg(feature = "v28")]
             VersionedCrate::V28(c) => c.crate_version.as_deref(),
 
@@ -141,11 +123,6 @@ impl VersionedCrate {
 impl<'a> VersionedIndexedCrate<'a> {
     pub fn new(crate_: &'a VersionedCrate) -> Self {
         match &crate_ {
-            #[cfg(feature = "v27")]
-            VersionedCrate::V27(c) => {
-                Self::V27(trustfall_rustdoc_adapter_v27::IndexedCrate::new(c))
-            }
-
             #[cfg(feature = "v28")]
             VersionedCrate::V28(c) => {
                 Self::V28(trustfall_rustdoc_adapter_v28::IndexedCrate::new(c))
@@ -177,32 +154,13 @@ impl<'a> VersionedIndexedCrate<'a> {
 }
 
 impl<'a> VersionedRustdocAdapter<'a> {
+    // Trustfall requires an `Arc<impl Adapter>`, but our adapter isn't `Sync`.
+    #[allow(clippy::arc_with_non_send_sync)]
     pub fn new(
-        current: &'a VersionedIndexedCrate,
-        baseline: Option<&'a VersionedIndexedCrate>,
+        current: &'a VersionedIndexedCrate<'a>,
+        baseline: Option<&'a VersionedIndexedCrate<'a>>,
     ) -> anyhow::Result<Self> {
         match (current, baseline) {
-            #[cfg(feature = "v27")]
-            (VersionedIndexedCrate::V27(c), Some(VersionedIndexedCrate::V27(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v27::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
-                Ok(VersionedRustdocAdapter::V27(
-                    trustfall_rustdoc_adapter_v27::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
-            #[cfg(feature = "v27")]
-            (VersionedIndexedCrate::V27(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v27::RustdocAdapter::new(c, None));
-                Ok(VersionedRustdocAdapter::V27(
-                    trustfall_rustdoc_adapter_v27::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
             #[cfg(feature = "v28")]
             (VersionedIndexedCrate::V28(c), Some(VersionedIndexedCrate::V28(b))) => {
                 let adapter = Arc::new(trustfall_rustdoc_adapter_v28::RustdocAdapter::new(
@@ -320,9 +278,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
     pub fn schema(&self) -> &Schema {
         match self {
-            #[cfg(feature = "v27")]
-            VersionedRustdocAdapter::V27(schema, ..) => schema,
-
             #[cfg(feature = "v28")]
             VersionedRustdocAdapter::V28(schema, ..) => schema,
 
