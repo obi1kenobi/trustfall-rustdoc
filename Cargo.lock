@@ -424,6 +424,8 @@ version = "34.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "83ba718a3adbe0a04a7b4760533c21b48289f66e70e0d25c53dbca2a75b58ec5"
 dependencies = [
+ "rayon",
+ "rustc-hash",
  "rustdoc-types 0.30.0",
  "trustfall",
 ]
@@ -458,7 +460,7 @@ dependencies = [
 
 [[package]]
 name = "trustfall_rustdoc"
-version = "0.16.1"
+version = "0.16.2"
 dependencies = [
  "anyhow",
  "serde",
