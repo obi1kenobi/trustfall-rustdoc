@@ -261,6 +261,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustdoc-types"
+version = "0.30.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89e3124c5a7883153fe3e762da9998cf36c302dbf1cc237869d297f9713e5655"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "ryu"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -410,6 +419,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "trustfall-rustdoc-adapter"
+version = "34.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "83ba718a3adbe0a04a7b4760533c21b48289f66e70e0d25c53dbca2a75b58ec5"
+dependencies = [
+ "rustdoc-types 0.30.0",
+ "trustfall",
+]
+
+[[package]]
 name = "trustfall_core"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -450,6 +469,7 @@ dependencies = [
  "trustfall-rustdoc-adapter 30.1.4",
  "trustfall-rustdoc-adapter 32.1.4",
  "trustfall-rustdoc-adapter 33.1.4",
+ "trustfall-rustdoc-adapter 34.0.0",
 ]
 
 [[package]]
