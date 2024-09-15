@@ -40,6 +40,8 @@ rustc-hash = [
     "trustfall-rustdoc-adapter-v33?/rustc-hash",
     "trustfall-rustdoc-adapter-v34?/rustc-hash",
 ]
+# Keep this list of rustdoc version-specific features at the bottom,
+# to ensure our version-updating automation works correctly.
 v28 = ["dep:trustfall-rustdoc-adapter-v28"]
 v29 = ["dep:trustfall-rustdoc-adapter-v29"]
 v30 = ["dep:trustfall-rustdoc-adapter-v30"]
