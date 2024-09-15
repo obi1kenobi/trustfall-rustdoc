@@ -149,6 +149,7 @@ jobs:
           # do not automatically trigger more workflows:
           # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#using-the-github_token-in-a-workflow
           GITHUB_TOKEN: ${{ secrets.RUSTDOC_VERSION_ADDER_TOKEN }}
+          NEXT_FORMAT: ${{inputs.next-format}}
         run: |
           set -euxo pipefail
 
