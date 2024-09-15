@@ -1,6 +1,6 @@
 [package]
 name = "trustfall_rustdoc"
-version = "0.16.1"
+version = "0.16.2"
 edition = "2021"
 authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
 license = "Apache-2.0 OR MIT"
@@ -24,17 +24,13 @@ trustfall-rustdoc-adapter-v34 = { package = "trustfall-rustdoc-adapter", version
 
 [features]
 default = ["v28", "v29", "v30", "v32", "v33", "v34"]
-v28 = ["dep:trustfall-rustdoc-adapter-v28"]
-v29 = ["dep:trustfall-rustdoc-adapter-v29"]
-v30 = ["dep:trustfall-rustdoc-adapter-v30"]
-v32 = ["dep:trustfall-rustdoc-adapter-v32"]
-v33 = ["dep:trustfall-rustdoc-adapter-v33"]
 rayon = [
     "trustfall-rustdoc-adapter-v28?/rayon",
     "trustfall-rustdoc-adapter-v29?/rayon",
     "trustfall-rustdoc-adapter-v30?/rayon",
     "trustfall-rustdoc-adapter-v32?/rayon",
     "trustfall-rustdoc-adapter-v33?/rayon",
+    "trustfall-rustdoc-adapter-v34?/rayon",
 ]
 rustc-hash = [
     "trustfall-rustdoc-adapter-v28?/rustc-hash",
@@ -42,5 +38,11 @@ rustc-hash = [
     "trustfall-rustdoc-adapter-v30?/rustc-hash",
     "trustfall-rustdoc-adapter-v32?/rustc-hash",
     "trustfall-rustdoc-adapter-v33?/rustc-hash",
+    "trustfall-rustdoc-adapter-v34?/rustc-hash",
 ]
+v28 = ["dep:trustfall-rustdoc-adapter-v28"]
+v29 = ["dep:trustfall-rustdoc-adapter-v29"]
+v30 = ["dep:trustfall-rustdoc-adapter-v30"]
+v32 = ["dep:trustfall-rustdoc-adapter-v32"]
+v33 = ["dep:trustfall-rustdoc-adapter-v33"]
 v34 = ["dep:trustfall-rustdoc-adapter-v34"]
