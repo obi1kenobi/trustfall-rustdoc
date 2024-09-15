@@ -14,7 +14,7 @@
 NEXT_VERSION_NUMBER="$1"
 
 # Fail on first error, on undefined variables, and on failures in pipelines.
-set -euo pipefail
+set -euxo pipefail
 
 # Go to the repo root directory.
 cd "$(git rev-parse --show-toplevel)"
@@ -31,15 +31,12 @@ fi
 
 ALL_VERSIONS="$(yq '.features.default[] | sub("v(\d+)", "${1}")' Cargo.toml -o json -r) ${NEXT_VERSION_NUMBER}"
 
-# Generate the new Rust source for the specified versions.
-pushd crates/generator
-cargo run -- $ALL_VERSIONS
-popd
+# Update the .github/ci.yml file to add the new feature test steps.
+TEST_STEP_MATCHER="# This line is a marker for our version-updating automation."
+sed -e "s/${TEST_STEP_MATCHER}/- name: test rustdoc v${NEXT_VERSION_NUMBER}\n        run: cargo test --no-default-features --features v${NEXT_VERSION_NUMBER}\n\n      ${TEST_STEP_MATCHER}/" \
+    -i .github/workflows/ci.yml
 
-# Reformat the generated Rust source code.
-cargo fmt
-
-# Update the Cargo.toml file to add the new dependency and feature number.
+# Update the Cargo.toml file to add the new dependency, the feature number, and feature selectors.
 
 # '1h;2,$H;$!d;g' means "look two lines at a time":
 # https://unix.stackexchange.com/questions/26284/how-can-i-use-sed-to-replace-a-multi-line-string
@@ -51,7 +48,27 @@ DEFAULT_MATCHER="default = \[${CURRENT_VERSIONS}\]"
 sed -e "s/$DEFAULT_MATCHER/default = [${CURRENT_VERSIONS}, \"v${NEXT_VERSION_NUMBER}\"]/" \
     -i Cargo.toml
 
+# '1h;2,$H;$!d;g' means "look two lines at a time":
+# https://unix.stackexchange.com/questions/26284/how-can-i-use-sed-to-replace-a-multi-line-string
+sed -e '1h;2,$H;$!d;g' \
+    -e "s/\/rayon\",\n\]/\/rayon\",\n    \"trustfall-rustdoc-adapter-v${NEXT_VERSION_NUMBER}?\/rayon\",\n]/" \
+    -i Cargo.toml
+
+# '1h;2,$H;$!d;g' means "look two lines at a time":
+# https://unix.stackexchange.com/questions/26284/how-can-i-use-sed-to-replace-a-multi-line-string
+sed -e '1h;2,$H;$!d;g' \
+    -e "s/\/rustc-hash\",\n\]/\/rustc-hash\",\n    \"trustfall-rustdoc-adapter-v${NEXT_VERSION_NUMBER}?\/rustc-hash\",\n]/" \
+    -i Cargo.toml
+
 echo "v${NEXT_VERSION_NUMBER} = [\"dep:trustfall-rustdoc-adapter-v${NEXT_VERSION_NUMBER}\"]" >>Cargo.toml
+
+# Generate the new Rust source for the specified versions.
+pushd crates/generator
+cargo run -- $ALL_VERSIONS
+popd
+
+# Reformat the generated Rust source code.
+cargo fmt
 
 # Ensure cargo regenerates the lockfile.
 cargo check
