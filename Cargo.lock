@@ -420,9 +420,7 @@ dependencies = [
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "36.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37cab17ae589fbb36bb452c0c7e51548c4a14db547b9c9977cc005a472e8cba5"
+version = "36.1.1"
 dependencies = [
  "rayon",
  "rustc-hash",
@@ -471,7 +469,7 @@ dependencies = [
  "trustfall-rustdoc-adapter 33.2.0",
  "trustfall-rustdoc-adapter 34.1.0",
  "trustfall-rustdoc-adapter 35.1.0",
- "trustfall-rustdoc-adapter 36.1.0",
+ "trustfall-rustdoc-adapter 36.1.1",
 ]
 
 [[package]]
