@@ -14,6 +14,7 @@ pub use {
     versioned::{VersionedIndex, VersionedRustdocAdapter, VersionedStorage},
 };
 
+#[non_exhaustive]
 #[derive(Debug, Error)]
 pub enum LoadingError {
     #[error("failed to parse 'cargo metadata' output: {0}")]
