@@ -10,6 +10,8 @@
 
 # Preconditions:
 # - a `trustfall-rustdoc-adapter` for the specified new rustdoc format must already be available.
+# - all previously-supported format version numbers are enabled as default features
+# - the list of default features is sorted in increasing order
 
 NEXT_VERSION_NUMBER="$1"
 
