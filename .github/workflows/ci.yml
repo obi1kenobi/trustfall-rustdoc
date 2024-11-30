@@ -79,10 +79,10 @@ jobs:
         run: |
           set -euxo pipefail
           ./scripts/regenerate_templated_code.sh
-          git status | tee status.log
+          git status | tee /tmp/status.log
 
           set +e
-          grep 'nothing to commit, working tree clean' status.log
+          grep 'nothing to commit, working tree clean' /tmp/status.log
           result=$?
           set -e
 
