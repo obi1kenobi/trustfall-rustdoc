@@ -60,6 +60,40 @@ jobs:
           RUSTDOCFLAGS: -D warnings
         run: cargo doc --workspace --all-features --no-deps --document-private-items
 
+  templated-code-is-up-to-date:
+    name: Ensure templated code is up-to-date
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install rust + caching
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          rustflags: ""
+
+      # Our strategy: re-run the code generation, and assert that nothing has changed.
+      - name: Ensure templated code is up-to-date
+        run: |
+          set -euxo pipefail
+          ./scripts/regenerate_templated_code.sh
+          git status | tee status.log
+
+          set +e
+          grep 'nothing to commit, working tree clean' status.log
+          result=$?
+          set -e
+
+          if [[ "$result" != "0" ]]; then
+            git diff
+            echo ""
+            echo "Running code generation on the templated code produced changes."
+            echo "Please update the checked in code to match what the automation generates."
+            exit 1
+          fi
+
   rust-tests:
     name: Run tests
     runs-on: ubuntu-latest
