@@ -26,14 +26,33 @@ pub enum VersionedStorage {
 }
 
 impl VersionedStorage {
+    pub fn crate_version(&self) -> Option<&str> {
+        match self {
+            #[cfg(feature = "v36")]
+            VersionedStorage::V36(s) => {
+                s.crate_version()
+            }
+        }
+    }
+
     add_version_method!();
 }
 
 #[non_exhaustive]
 #[derive(Debug)]
-pub enum VersionedHandler<'a> {
+pub enum VersionedIndex<'a> {
     #[cfg(feature = "v36")]
-    V36(trustfall_rustdoc_adapter_v36::PackageHandler<'a>),
+    V36(trustfall_rustdoc_adapter_v36::PackageIndex<'a>),
+}
+
+impl<'a> VersionedIndex<'a> {
+    pub fn from_storage(storage: &'a VersionedStorage) -> Self {
+        match storage {
+            VersionedStorage::V36(s) => Self::V36(
+                trustfall_rustdoc_adapter_v36::PackageIndex::from_storage(s),
+            ),
+        }
+    }
 }
 
 #[non_exhaustive]
@@ -77,12 +96,12 @@ pub enum VersionedRustdocAdapter<'a> {
 
 impl<'a> VersionedRustdocAdapter<'a> {
     pub fn new(
-        current: &'a VersionedHandler<'a>,
-        baseline: Option<&'a VersionedHandler<'a>>,
+        current: &'a VersionedIndex<'a>,
+        baseline: Option<&'a VersionedIndex<'a>>,
     ) -> anyhow::Result<Self> {
         match (current, baseline) {
             #[cfg(feature = "v36")]
-            (VersionedHandler::V36(c), Some(VersionedHandler::V36(b))) => {
+            (VersionedIndex::V36(c), Some(VersionedIndex::V36(b))) => {
                 let adapter = trustfall_rustdoc_adapter_v36::RustdocAdapter::new(
                     c,
                     Some(b),
@@ -94,7 +113,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v36")]
-            (VersionedHandler::V36(c), None) => {
+            (VersionedIndex::V36(c), None) => {
                 let adapter = trustfall_rustdoc_adapter_v36::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V36(
                     trustfall_rustdoc_adapter_v36::RustdocAdapter::schema(),

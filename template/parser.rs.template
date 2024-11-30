@@ -1,60 +1,41 @@
-use std::path::Path;
-use std::{fs::File, io::Read};
+use std::{fs::File, io::Read, path::Path};
 
-use anyhow::{bail, Context};
-use serde::Deserialize;
+use crate::{LoadingError, versioned::VersionedStorage};
 
-use crate::versioned::VersionedCrate;
+pub fn load_rustdoc(path: &Path, metadata: Option<cargo_metadata::Metadata>) -> Result<VersionedStorage, LoadingError> {
+    let package = metadata.map(super::get_package_metadata).transpose()?;
 
-#[derive(Deserialize)]
-struct RustdocFormatVersion {
-    format_version: u32,
-}
-
-fn detect_rustdoc_format_version(path: &Path, file_data: &str) -> anyhow::Result<u32> {
-    let version = serde_json::from_str::<RustdocFormatVersion>(file_data)
-        .with_context(|| format!("unrecognized rustdoc format for file {}", path.display()))?;
-
-    Ok(version.format_version)
-}
-
-fn parse_or_report_error<T>(path: &Path, file_data: &str, format_version: u32) -> anyhow::Result<T>
-where
-    T: for<'a> Deserialize<'a>,
-{
-    serde_json::from_str(file_data).with_context(|| {
-        format!(
-            "unexpected parse error for v{format_version} rustdoc for file {}",
-            path.display()
-        )
-    })
-}
-
-pub fn load_rustdoc(path: &Path) -> anyhow::Result<VersionedCrate> {
     // Parsing JSON after fully reading a file into memory is much faster than
     // parsing directly from a file, even if buffered:
     // https://github.com/serde-rs/json/issues/160
     let mut file_data = String::new();
     File::open(path)
-        .with_context(|| format!("failed to open rustdoc JSON file {}", path.display()))?
+        .map_err(|e| LoadingError::RustdocIoError(path.display().to_string(), e))?
         .read_to_string(&mut file_data)
-        .with_context(|| format!("failed to read rustdoc JSON file {}", path.display()))?;
+        .map_err(|e| LoadingError::RustdocIoError(path.display().to_string(), e))?;
 
-    let format_version = detect_rustdoc_format_version(path, &file_data)?;
+    let format_version = super::detect_rustdoc_format_version(path, &file_data)?;
 
     match format_version {
         {{#each version_numbers}}
         #[cfg(feature = "v{{this}}")]
-        {{this}} => Ok(VersionedCrate::V{{this}}(parse_or_report_error(
-            path,
-            &file_data,
-            format_version,
-        )?)),
+        {{this}} => {
+            let rustdoc: trustfall_rustdoc_adapter_v{{this}}::Crate = parse_or_report_error(path, &file_data, format_version)?;
+            match package {
+                Some(package) => {
+                    Ok(VersionedStorage::V{{this}}(
+                        trustfall_rustdoc_adapter_v{{this}}::PackageStorage::from_rustdoc_and_package(rustdoc, package),
+                    ))
+                }
+                None => Ok(VersionedStorage::V{{this}}(
+                    trustfall_rustdoc_adapter_v{{this}}::PackageStorage::from_rustdoc(rustdoc),
+                ))
+            }
+        }
 
         {{/each}}
-        _ => bail!(
-            "rustdoc format v{format_version} for file {} is not supported",
-            path.display()
+        _ => return Err(
+            LoadingError::UnsupportedFormat(format_version, path.display().to_string())
         ),
     }
 }

@@ -21,6 +21,8 @@ trustfall-rustdoc-adapter-v33 = { package = "trustfall-rustdoc-adapter", version
 trustfall-rustdoc-adapter-v34 = { package = "trustfall-rustdoc-adapter", version = ">=34.1.0,<34.2.0", optional = true }
 trustfall-rustdoc-adapter-v35 = { package = "trustfall-rustdoc-adapter", version = ">=35.1.0,<35.2.0", optional = true }
 trustfall-rustdoc-adapter-v36 = { package = "trustfall-rustdoc-adapter", version = ">=36.1.0,<36.2.0", optional = true }
+thiserror = "2.0.3"
+cargo_metadata = "0.18.1"
 
 [features]
 default = ["v36"]
