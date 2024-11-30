@@ -17,12 +17,14 @@ jobs:
     needs:
       - lint
       - rust-tests
+      - templated-code
     if: ${{ success() || failure() }}  # Run this job even if a dependency has failed.
     steps:
       - name: Job outcomes
         run: |
           echo "lint: ${{ needs.lint.result }}"
           echo "rust-tests: ${{ needs.rust-tests.result }}"
+          echo "templated-code: ${{ needs.templated-code.result }}"
 
       # Fail this required job if any of its dependent jobs have failed.
       #
@@ -60,7 +62,7 @@ jobs:
           RUSTDOCFLAGS: -D warnings
         run: cargo doc --workspace --all-features --no-deps --document-private-items
 
-  templated-code-is-up-to-date:
+  templated-code:
     name: Ensure templated code is up-to-date
     runs-on: ubuntu-latest
     steps:
