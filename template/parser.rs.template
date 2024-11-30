@@ -20,7 +20,7 @@ pub fn load_rustdoc(path: &Path, metadata: Option<cargo_metadata::Metadata>) -> 
         {{#each version_numbers}}
         #[cfg(feature = "v{{this}}")]
         {{this}} => {
-            let rustdoc: trustfall_rustdoc_adapter_v{{this}}::Crate = parse_or_report_error(path, &file_data, format_version)?;
+            let rustdoc: trustfall_rustdoc_adapter_v{{this}}::Crate = super::parse_or_report_error(path, &file_data, format_version)?;
             match package {
                 Some(package) => {
                     Ok(VersionedStorage::V{{this}}(

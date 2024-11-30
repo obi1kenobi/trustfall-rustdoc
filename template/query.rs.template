@@ -7,8 +7,8 @@ use crate::versioned::VersionedRustdocAdapter;
 type QueryResult = BTreeMap<Arc<str>, FieldValue>;
 
 impl<'a> VersionedRustdocAdapter<'a> {
-    pub fn run_query<K: Into<Arc<str>>, V: Into<FieldValue>>(
-        &self,
+    pub fn run_query<'slf: 'a, K: Into<Arc<str>>, V: Into<FieldValue>>(
+        &'slf self,
         query: &str,
         vars: BTreeMap<K, V>,
     ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
@@ -16,7 +16,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
             {{#each version_numbers}}
             #[cfg(feature = "v{{this}}")]
             VersionedRustdocAdapter::V{{this}}(_, adapter) => {
-                execute_query(self.schema(), adapter.clone(), query, vars)
+                execute_query(self.schema(), Arc::new(adapter), query, vars)
             }
 
             {{/each}}

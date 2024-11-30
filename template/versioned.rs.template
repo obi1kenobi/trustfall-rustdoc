@@ -1,4 +1,4 @@
-use std::{fmt::Debug, sync::Arc};
+use std::fmt::Debug;
 
 use anyhow::bail;
 use trustfall::Schema;
@@ -57,7 +57,7 @@ impl VersionedStorage {
         match self {
             {{#each version_numbers}}
             #[cfg(feature = "v{{this}}")]
-            PackageStorage::V{{this}}(s) => s.crate_version(),
+            VersionedStorage::V{{this}}(s) => s.crate_version(),
 
             {{/each}}
         }
@@ -111,6 +111,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             {{/each}}
+            #[allow(unreachable_patterns)]
             (c, Some(b)) => {
                 bail!(
                     "version mismatch between current (v{}) and baseline (v{}) format versions",
