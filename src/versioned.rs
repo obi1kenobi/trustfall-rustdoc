@@ -1,4 +1,4 @@
-use std::{fmt::Debug, sync::Arc};
+use std::fmt::Debug;
 
 use anyhow::bail;
 use trustfall::Schema;
@@ -31,144 +31,129 @@ macro_rules! add_version_method {
 
 #[non_exhaustive]
 #[derive(Debug)]
-pub enum VersionedCrate {
+pub enum VersionedStorage {
     #[cfg(feature = "v30")]
-    V30(trustfall_rustdoc_adapter_v30::Crate),
+    V30(trustfall_rustdoc_adapter_v30::PackageStorage),
 
     #[cfg(feature = "v32")]
-    V32(trustfall_rustdoc_adapter_v32::Crate),
+    V32(trustfall_rustdoc_adapter_v32::PackageStorage),
 
     #[cfg(feature = "v33")]
-    V33(trustfall_rustdoc_adapter_v33::Crate),
+    V33(trustfall_rustdoc_adapter_v33::PackageStorage),
 
     #[cfg(feature = "v34")]
-    V34(trustfall_rustdoc_adapter_v34::Crate),
+    V34(trustfall_rustdoc_adapter_v34::PackageStorage),
 
     #[cfg(feature = "v35")]
-    V35(trustfall_rustdoc_adapter_v35::Crate),
+    V35(trustfall_rustdoc_adapter_v35::PackageStorage),
 
     #[cfg(feature = "v36")]
-    V36(trustfall_rustdoc_adapter_v36::Crate),
+    V36(trustfall_rustdoc_adapter_v36::PackageStorage),
 }
 
 #[non_exhaustive]
 #[derive(Debug)]
-pub enum VersionedIndexedCrate<'a> {
+pub enum VersionedIndex<'a> {
     #[cfg(feature = "v30")]
-    V30(trustfall_rustdoc_adapter_v30::IndexedCrate<'a>),
+    V30(trustfall_rustdoc_adapter_v30::PackageIndex<'a>),
 
     #[cfg(feature = "v32")]
-    V32(trustfall_rustdoc_adapter_v32::IndexedCrate<'a>),
+    V32(trustfall_rustdoc_adapter_v32::PackageIndex<'a>),
 
     #[cfg(feature = "v33")]
-    V33(trustfall_rustdoc_adapter_v33::IndexedCrate<'a>),
+    V33(trustfall_rustdoc_adapter_v33::PackageIndex<'a>),
 
     #[cfg(feature = "v34")]
-    V34(trustfall_rustdoc_adapter_v34::IndexedCrate<'a>),
+    V34(trustfall_rustdoc_adapter_v34::PackageIndex<'a>),
 
     #[cfg(feature = "v35")]
-    V35(trustfall_rustdoc_adapter_v35::IndexedCrate<'a>),
+    V35(trustfall_rustdoc_adapter_v35::PackageIndex<'a>),
 
     #[cfg(feature = "v36")]
-    V36(trustfall_rustdoc_adapter_v36::IndexedCrate<'a>),
+    V36(trustfall_rustdoc_adapter_v36::PackageIndex<'a>),
 }
 
 #[non_exhaustive]
 pub enum VersionedRustdocAdapter<'a> {
     #[cfg(feature = "v30")]
-    V30(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v30::RustdocAdapter<'a>>,
-    ),
+    V30(Schema, trustfall_rustdoc_adapter_v30::RustdocAdapter<'a>),
 
     #[cfg(feature = "v32")]
-    V32(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v32::RustdocAdapter<'a>>,
-    ),
+    V32(Schema, trustfall_rustdoc_adapter_v32::RustdocAdapter<'a>),
 
     #[cfg(feature = "v33")]
-    V33(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v33::RustdocAdapter<'a>>,
-    ),
+    V33(Schema, trustfall_rustdoc_adapter_v33::RustdocAdapter<'a>),
 
     #[cfg(feature = "v34")]
-    V34(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v34::RustdocAdapter<'a>>,
-    ),
+    V34(Schema, trustfall_rustdoc_adapter_v34::RustdocAdapter<'a>),
 
     #[cfg(feature = "v35")]
-    V35(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v35::RustdocAdapter<'a>>,
-    ),
+    V35(Schema, trustfall_rustdoc_adapter_v35::RustdocAdapter<'a>),
 
     #[cfg(feature = "v36")]
-    V36(
-        Schema,
-        Arc<trustfall_rustdoc_adapter_v36::RustdocAdapter<'a>>,
-    ),
+    V36(Schema, trustfall_rustdoc_adapter_v36::RustdocAdapter<'a>),
 }
 
-impl VersionedCrate {
+impl VersionedStorage {
+    /// The version of the crate held here, as reported by its rustdoc data.
+    ///
+    /// This is the version listed in the `Cargo.toml` of the crate, not its rustdoc format version.
     pub fn crate_version(&self) -> Option<&str> {
         match self {
             #[cfg(feature = "v30")]
-            VersionedCrate::V30(c) => c.crate_version.as_deref(),
+            VersionedStorage::V30(s) => s.crate_version(),
 
             #[cfg(feature = "v32")]
-            VersionedCrate::V32(c) => c.crate_version.as_deref(),
+            VersionedStorage::V32(s) => s.crate_version(),
 
             #[cfg(feature = "v33")]
-            VersionedCrate::V33(c) => c.crate_version.as_deref(),
+            VersionedStorage::V33(s) => s.crate_version(),
 
             #[cfg(feature = "v34")]
-            VersionedCrate::V34(c) => c.crate_version.as_deref(),
+            VersionedStorage::V34(s) => s.crate_version(),
 
             #[cfg(feature = "v35")]
-            VersionedCrate::V35(c) => c.crate_version.as_deref(),
+            VersionedStorage::V35(s) => s.crate_version(),
 
             #[cfg(feature = "v36")]
-            VersionedCrate::V36(c) => c.crate_version.as_deref(),
+            VersionedStorage::V36(s) => s.crate_version(),
         }
     }
 
     add_version_method!();
 }
 
-impl<'a> VersionedIndexedCrate<'a> {
-    pub fn new(crate_: &'a VersionedCrate) -> Self {
-        match &crate_ {
+impl<'a> VersionedIndex<'a> {
+    pub fn from_storage(storage: &'a VersionedStorage) -> Self {
+        match storage {
             #[cfg(feature = "v30")]
-            VersionedCrate::V30(c) => {
-                Self::V30(trustfall_rustdoc_adapter_v30::IndexedCrate::new(c))
+            VersionedStorage::V30(s) => {
+                Self::V30(trustfall_rustdoc_adapter_v30::PackageIndex::from_storage(s))
             }
 
             #[cfg(feature = "v32")]
-            VersionedCrate::V32(c) => {
-                Self::V32(trustfall_rustdoc_adapter_v32::IndexedCrate::new(c))
+            VersionedStorage::V32(s) => {
+                Self::V32(trustfall_rustdoc_adapter_v32::PackageIndex::from_storage(s))
             }
 
             #[cfg(feature = "v33")]
-            VersionedCrate::V33(c) => {
-                Self::V33(trustfall_rustdoc_adapter_v33::IndexedCrate::new(c))
+            VersionedStorage::V33(s) => {
+                Self::V33(trustfall_rustdoc_adapter_v33::PackageIndex::from_storage(s))
             }
 
             #[cfg(feature = "v34")]
-            VersionedCrate::V34(c) => {
-                Self::V34(trustfall_rustdoc_adapter_v34::IndexedCrate::new(c))
+            VersionedStorage::V34(s) => {
+                Self::V34(trustfall_rustdoc_adapter_v34::PackageIndex::from_storage(s))
             }
 
             #[cfg(feature = "v35")]
-            VersionedCrate::V35(c) => {
-                Self::V35(trustfall_rustdoc_adapter_v35::IndexedCrate::new(c))
+            VersionedStorage::V35(s) => {
+                Self::V35(trustfall_rustdoc_adapter_v35::PackageIndex::from_storage(s))
             }
 
             #[cfg(feature = "v36")]
-            VersionedCrate::V36(c) => {
-                Self::V36(trustfall_rustdoc_adapter_v36::IndexedCrate::new(c))
+            VersionedStorage::V36(s) => {
+                Self::V36(trustfall_rustdoc_adapter_v36::PackageIndex::from_storage(s))
             }
         }
     }
@@ -177,19 +162,14 @@ impl<'a> VersionedIndexedCrate<'a> {
 }
 
 impl<'a> VersionedRustdocAdapter<'a> {
-    // Trustfall requires an `Arc<impl Adapter>`, but our adapter isn't `Sync`.
-    #[allow(clippy::arc_with_non_send_sync)]
     pub fn new(
-        current: &'a VersionedIndexedCrate<'a>,
-        baseline: Option<&'a VersionedIndexedCrate<'a>>,
+        current: &'a VersionedIndex<'a>,
+        baseline: Option<&'a VersionedIndex<'a>>,
     ) -> anyhow::Result<Self> {
         match (current, baseline) {
             #[cfg(feature = "v30")]
-            (VersionedIndexedCrate::V30(c), Some(VersionedIndexedCrate::V30(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v30::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
+            (VersionedIndex::V30(c), Some(VersionedIndex::V30(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v30::RustdocAdapter::new(c, Some(b));
                 Ok(VersionedRustdocAdapter::V30(
                     trustfall_rustdoc_adapter_v30::RustdocAdapter::schema(),
                     adapter,
@@ -197,8 +177,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v30")]
-            (VersionedIndexedCrate::V30(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v30::RustdocAdapter::new(c, None));
+            (VersionedIndex::V30(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v30::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V30(
                     trustfall_rustdoc_adapter_v30::RustdocAdapter::schema(),
                     adapter,
@@ -206,11 +186,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v32")]
-            (VersionedIndexedCrate::V32(c), Some(VersionedIndexedCrate::V32(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v32::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
+            (VersionedIndex::V32(c), Some(VersionedIndex::V32(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v32::RustdocAdapter::new(c, Some(b));
                 Ok(VersionedRustdocAdapter::V32(
                     trustfall_rustdoc_adapter_v32::RustdocAdapter::schema(),
                     adapter,
@@ -218,8 +195,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v32")]
-            (VersionedIndexedCrate::V32(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v32::RustdocAdapter::new(c, None));
+            (VersionedIndex::V32(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v32::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V32(
                     trustfall_rustdoc_adapter_v32::RustdocAdapter::schema(),
                     adapter,
@@ -227,11 +204,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v33")]
-            (VersionedIndexedCrate::V33(c), Some(VersionedIndexedCrate::V33(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v33::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
+            (VersionedIndex::V33(c), Some(VersionedIndex::V33(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v33::RustdocAdapter::new(c, Some(b));
                 Ok(VersionedRustdocAdapter::V33(
                     trustfall_rustdoc_adapter_v33::RustdocAdapter::schema(),
                     adapter,
@@ -239,8 +213,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v33")]
-            (VersionedIndexedCrate::V33(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v33::RustdocAdapter::new(c, None));
+            (VersionedIndex::V33(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v33::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V33(
                     trustfall_rustdoc_adapter_v33::RustdocAdapter::schema(),
                     adapter,
@@ -248,11 +222,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v34")]
-            (VersionedIndexedCrate::V34(c), Some(VersionedIndexedCrate::V34(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v34::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
+            (VersionedIndex::V34(c), Some(VersionedIndex::V34(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v34::RustdocAdapter::new(c, Some(b));
                 Ok(VersionedRustdocAdapter::V34(
                     trustfall_rustdoc_adapter_v34::RustdocAdapter::schema(),
                     adapter,
@@ -260,8 +231,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v34")]
-            (VersionedIndexedCrate::V34(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v34::RustdocAdapter::new(c, None));
+            (VersionedIndex::V34(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v34::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V34(
                     trustfall_rustdoc_adapter_v34::RustdocAdapter::schema(),
                     adapter,
@@ -269,11 +240,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v35")]
-            (VersionedIndexedCrate::V35(c), Some(VersionedIndexedCrate::V35(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v35::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
+            (VersionedIndex::V35(c), Some(VersionedIndex::V35(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v35::RustdocAdapter::new(c, Some(b));
                 Ok(VersionedRustdocAdapter::V35(
                     trustfall_rustdoc_adapter_v35::RustdocAdapter::schema(),
                     adapter,
@@ -281,8 +249,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v35")]
-            (VersionedIndexedCrate::V35(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v35::RustdocAdapter::new(c, None));
+            (VersionedIndex::V35(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v35::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V35(
                     trustfall_rustdoc_adapter_v35::RustdocAdapter::schema(),
                     adapter,
@@ -290,11 +258,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v36")]
-            (VersionedIndexedCrate::V36(c), Some(VersionedIndexedCrate::V36(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v36::RustdocAdapter::new(
-                    c,
-                    Some(b),
-                ));
+            (VersionedIndex::V36(c), Some(VersionedIndex::V36(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v36::RustdocAdapter::new(c, Some(b));
                 Ok(VersionedRustdocAdapter::V36(
                     trustfall_rustdoc_adapter_v36::RustdocAdapter::schema(),
                     adapter,
@@ -302,14 +267,15 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v36")]
-            (VersionedIndexedCrate::V36(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v36::RustdocAdapter::new(c, None));
+            (VersionedIndex::V36(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v36::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V36(
                     trustfall_rustdoc_adapter_v36::RustdocAdapter::schema(),
                     adapter,
                 ))
             }
 
+            #[allow(unreachable_patterns)]
             (c, Some(b)) => {
                 bail!(
                     "version mismatch between current (v{}) and baseline (v{}) format versions",

@@ -1,4 +1,4 @@
-use std::{fmt::Debug, sync::Arc};
+use std::fmt::Debug;
 
 use anyhow::bail;
 use trustfall::Schema;
@@ -19,20 +19,20 @@ macro_rules! add_version_method {
 
 #[non_exhaustive]
 #[derive(Debug)]
-pub enum VersionedCrate {
+pub enum VersionedStorage {
     {{#each version_numbers}}
     #[cfg(feature = "v{{this}}")]
-    V{{this}}(trustfall_rustdoc_adapter_v{{this}}::Crate),
+    V{{this}}(trustfall_rustdoc_adapter_v{{this}}::PackageStorage),
 
     {{/each}}
 }
 
 #[non_exhaustive]
 #[derive(Debug)]
-pub enum VersionedIndexedCrate<'a> {
+pub enum VersionedIndex<'a> {
     {{#each version_numbers}}
     #[cfg(feature = "v{{this}}")]
-    V{{this}}(trustfall_rustdoc_adapter_v{{this}}::IndexedCrate<'a>),
+    V{{this}}(trustfall_rustdoc_adapter_v{{this}}::PackageIndex<'a>),
 
     {{/each}}
 }
@@ -43,18 +43,21 @@ pub enum VersionedRustdocAdapter<'a> {
     #[cfg(feature = "v{{this}}")]
     V{{this}}(
         Schema,
-        Arc<trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter<'a>>,
+        trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter<'a>,
     ),
 
     {{/each}}
 }
 
-impl VersionedCrate {
+impl VersionedStorage {
+    /// The version of the crate held here, as reported by its rustdoc data.
+    ///
+    /// This is the version listed in the `Cargo.toml` of the crate, not its rustdoc format version.
     pub fn crate_version(&self) -> Option<&str> {
         match self {
             {{#each version_numbers}}
             #[cfg(feature = "v{{this}}")]
-            VersionedCrate::V{{this}}(c) => c.crate_version.as_deref(),
+            VersionedStorage::V{{this}}(s) => s.crate_version(),
 
             {{/each}}
         }
@@ -63,14 +66,14 @@ impl VersionedCrate {
     add_version_method!();
 }
 
-impl<'a> VersionedIndexedCrate<'a> {
-    pub fn new(crate_: &'a VersionedCrate) -> Self {
-        match &crate_ {
+impl<'a> VersionedIndex<'a> {
+    pub fn from_storage(storage: &'a VersionedStorage) -> Self {
+        match storage {
             {{#each version_numbers}}
             #[cfg(feature = "v{{this}}")]
-            VersionedCrate::V{{this}}(c) => {
-                Self::V{{this}}(trustfall_rustdoc_adapter_v{{this}}::IndexedCrate::new(c))
-            }
+            VersionedStorage::V{{this}}(s) => Self::V{{this}}(
+                trustfall_rustdoc_adapter_v{{this}}::PackageIndex::from_storage(s),
+            ),
 
             {{/each}}
         }
@@ -80,20 +83,18 @@ impl<'a> VersionedIndexedCrate<'a> {
 }
 
 impl<'a> VersionedRustdocAdapter<'a> {
-    // Trustfall requires an `Arc<impl Adapter>`, but our adapter isn't `Sync`.
-    #[allow(clippy::arc_with_non_send_sync)]
     pub fn new(
-        current: &'a VersionedIndexedCrate<'a>,
-        baseline: Option<&'a VersionedIndexedCrate<'a>>,
+        current: &'a VersionedIndex<'a>,
+        baseline: Option<&'a VersionedIndex<'a>>,
     ) -> anyhow::Result<Self> {
         match (current, baseline) {
             {{#each version_numbers}}
             #[cfg(feature = "v{{this}}")]
-            (VersionedIndexedCrate::V{{this}}(c), Some(VersionedIndexedCrate::V{{this}}(b))) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::new(
+            (VersionedIndex::V{{this}}(c), Some(VersionedIndex::V{{this}}(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::new(
                     c,
                     Some(b),
-                ));
+                );
                 Ok(VersionedRustdocAdapter::V{{this}}(
                     trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::schema(),
                     adapter,
@@ -101,8 +102,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             #[cfg(feature = "v{{this}}")]
-            (VersionedIndexedCrate::V{{this}}(c), None) => {
-                let adapter = Arc::new(trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::new(c, None));
+            (VersionedIndex::V{{this}}(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::new(c, None);
                 Ok(VersionedRustdocAdapter::V{{this}}(
                     trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter::schema(),
                     adapter,
@@ -110,6 +111,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
 
             {{/each}}
+            #[allow(unreachable_patterns)]
             (c, Some(b)) => {
                 bail!(
                     "version mismatch between current (v{}) and baseline (v{}) format versions",
