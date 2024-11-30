@@ -34,7 +34,7 @@ pub fn load_rustdoc(path: &Path, metadata: Option<cargo_metadata::Metadata>) -> 
         }
 
         {{/each}}
-        _ => return Err(
+        _ => Err(
             LoadingError::UnsupportedFormat(format_version, path.display().to_string())
         ),
     }

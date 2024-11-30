@@ -116,11 +116,9 @@ pub fn load_rustdoc(
             }
         }
 
-        _ => {
-            return Err(LoadingError::UnsupportedFormat(
-                format_version,
-                path.display().to_string(),
-            ))
-        }
+        _ => Err(LoadingError::UnsupportedFormat(
+            format_version,
+            path.display().to_string(),
+        )),
     }
 }
