@@ -89,12 +89,12 @@ fn get_package_metadata(
         .filter(|p| p.name == dependency_name);
     let Some(package) = package_candidates.next() else {
         return Err(LoadingError::MetadataParsing(
-            "failed to find package metadata for package {dependency_name}".into(),
+            format!("failed to find package metadata for package {dependency_name}"),
         ));
     };
     if package_candidates.next().is_some() {
         return Err(LoadingError::MetadataParsing(
-            "ambiguous package metadata found for {dependency_name}".into(),
+            format!("ambiguous package metadata found for {dependency_name}"),
         ));
     }
 
