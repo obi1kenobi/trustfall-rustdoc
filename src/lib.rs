@@ -82,11 +82,22 @@ fn get_package_metadata(
         .first()
         .expect("no first dependency, even though we just checked the count");
     let dependency_name = dependency.name.clone();
+    let dependency_path = dependency.path.clone();
+    let dependency_version = dependency.req.clone();
 
-    let mut package_candidates = metadata
+    let package_candidates = metadata
         .packages
         .into_iter()
         .filter(|p| p.name == dependency_name);
+
+    let mut package_candidates: Box<dyn Iterator<Item = _>> = if let Some(path) = dependency_path {
+        // We're using a path dependency.
+        Box::new(package_candidates.filter(move |p| p.manifest_path.starts_with(&path)))
+    } else {
+        // We're using a version number dependency.
+        Box::new(package_candidates.filter(move |p| dependency_version.matches(&p.version)))
+    };
+
     let Some(package) = package_candidates.next() else {
         return Err(LoadingError::MetadataParsing(
             "failed to find package metadata for package {dependency_name}".into(),
