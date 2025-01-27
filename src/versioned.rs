@@ -21,6 +21,9 @@ macro_rules! add_version_method {
 
                 #[cfg(feature = "v37")]
                 Self::V37(..) => 37,
+
+                #[cfg(feature = "v39")]
+                Self::V39(..) => 39,
             }
         }
     };
@@ -43,6 +46,9 @@ pub enum VersionedStorage {
 
     #[cfg(feature = "v37")]
     V37(trustfall_rustdoc_adapter_v37::PackageStorage),
+
+    #[cfg(feature = "v39")]
+    V39(trustfall_rustdoc_adapter_v39::PackageStorage),
 }
 
 #[non_exhaustive]
@@ -62,6 +68,9 @@ pub enum VersionedIndex<'a> {
 
     #[cfg(feature = "v37")]
     V37(trustfall_rustdoc_adapter_v37::PackageIndex<'a>),
+
+    #[cfg(feature = "v39")]
+    V39(trustfall_rustdoc_adapter_v39::PackageIndex<'a>),
 }
 
 #[non_exhaustive]
@@ -80,6 +89,9 @@ pub enum VersionedRustdocAdapter<'a> {
 
     #[cfg(feature = "v37")]
     V37(Schema, trustfall_rustdoc_adapter_v37::RustdocAdapter<'a>),
+
+    #[cfg(feature = "v39")]
+    V39(Schema, trustfall_rustdoc_adapter_v39::RustdocAdapter<'a>),
 }
 
 impl VersionedStorage {
@@ -102,6 +114,9 @@ impl VersionedStorage {
 
             #[cfg(feature = "v37")]
             VersionedStorage::V37(s) => s.crate_version(),
+
+            #[cfg(feature = "v39")]
+            VersionedStorage::V39(s) => s.crate_version(),
         }
     }
 
@@ -134,6 +149,11 @@ impl<'a> VersionedIndex<'a> {
             #[cfg(feature = "v37")]
             VersionedStorage::V37(s) => {
                 Self::V37(trustfall_rustdoc_adapter_v37::PackageIndex::from_storage(s))
+            }
+
+            #[cfg(feature = "v39")]
+            VersionedStorage::V39(s) => {
+                Self::V39(trustfall_rustdoc_adapter_v39::PackageIndex::from_storage(s))
             }
         }
     }
@@ -237,6 +257,24 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 ))
             }
 
+            #[cfg(feature = "v39")]
+            (VersionedIndex::V39(c), Some(VersionedIndex::V39(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v39::RustdocAdapter::new(c, Some(b));
+                Ok(VersionedRustdocAdapter::V39(
+                    trustfall_rustdoc_adapter_v39::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
+            #[cfg(feature = "v39")]
+            (VersionedIndex::V39(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v39::RustdocAdapter::new(c, None);
+                Ok(VersionedRustdocAdapter::V39(
+                    trustfall_rustdoc_adapter_v39::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
             #[allow(unreachable_patterns)]
             (c, Some(b)) => {
                 bail!(
@@ -264,6 +302,9 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v37")]
             VersionedRustdocAdapter::V37(schema, ..) => schema,
+
+            #[cfg(feature = "v39")]
+            VersionedRustdocAdapter::V39(schema, ..) => schema,
         }
     }
 

@@ -37,6 +37,11 @@ impl<'a> VersionedRustdocAdapter<'a> {
             VersionedRustdocAdapter::V37(_, adapter) => {
                 execute_query(self.schema(), Arc::new(adapter), query, vars)
             }
+
+            #[cfg(feature = "v39")]
+            VersionedRustdocAdapter::V39(_, adapter) => {
+                execute_query(self.schema(), Arc::new(adapter), query, vars)
+            }
         }
     }
 }
