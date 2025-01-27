@@ -55,6 +55,7 @@ jobs:
             Cargo.toml
             Cargo.lock
             src/**/*.rs
+            .github/workflows/ci.yml
 
   make-pr:
     if: github.repository_owner == 'obi1kenobi'
@@ -99,6 +100,7 @@ jobs:
           git add ./Cargo.toml
           git add ./Cargo.lock
           git add ./src
+          git add ./.github/workflows/ci.yml
           DIFF="$(git diff --staged)"
           if [[ "$DIFF" == "" ]]; then
             echo >2 "contents were not changed, bailing out and not making a PR"
