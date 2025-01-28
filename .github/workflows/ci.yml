@@ -115,12 +115,6 @@ jobs:
         run: cargo test --no-run --all-features
 
       # Test features individually
-      - name: test rustdoc v32
-        run: cargo test --no-default-features --features v32
-
-      - name: test rustdoc v33
-        run: cargo test --no-default-features --features v33
-
       - name: test rustdoc v35
         run: cargo test --no-default-features --features v35
 
