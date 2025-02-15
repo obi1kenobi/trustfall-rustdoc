@@ -86,8 +86,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          DIFF="$(git diff)"
-
           echo "${PR_MESSAGE}" > body.md
 
       - name: commit
@@ -103,7 +101,7 @@ jobs:
           git add ./.github/workflows/ci.yml
           DIFF="$(git diff --staged)"
           if [[ "$DIFF" == "" ]]; then
-            echo >2 "contents were not changed, bailing out and not making a PR"
+            echo >&2 "contents were not changed, bailing out and not making a PR"
             exit 1
           fi
           git commit --no-verify --file=body.md
