@@ -119,9 +119,6 @@ jobs:
         run: cargo test --no-run --all-features
 
       # Test features individually
-      - name: test rustdoc v35
-        run: cargo test --no-default-features --features v35
-
       - name: test rustdoc v36
         run: cargo test --no-default-features --features v36
 
@@ -130,6 +127,9 @@ jobs:
 
       - name: test rustdoc v39
         run: cargo test --no-default-features --features v39
+
+      - name: test rustdoc v43
+        run: cargo test --no-default-features --features v43
 
       # This line is a marker for our version-updating automation.
       # All per-feature tests must be added above this line.
