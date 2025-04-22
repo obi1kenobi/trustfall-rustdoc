@@ -13,11 +13,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
         vars: BTreeMap<K, V>,
     ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
         match self {
-            #[cfg(feature = "v36")]
-            VersionedRustdocAdapter::V36(_, adapter) => {
-                execute_query(self.schema(), Arc::new(adapter), query, vars)
-            }
-
             #[cfg(feature = "v37")]
             VersionedRustdocAdapter::V37(_, adapter) => {
                 execute_query(self.schema(), Arc::new(adapter), query, vars)
