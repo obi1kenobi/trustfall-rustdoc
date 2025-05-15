@@ -25,7 +25,7 @@ pub enum LoadingError {
     RustdocIoError(String, std::io::Error),
 
     #[error("unable to detect rustdoc 'format_version' key in file: {0}")]
-    RustdocFormatDetection(String, anyhow::Error),
+    RustdocFormatDetection(String),
 
     #[error("failed to parse rustdoc JSON format v{0} file: {1}")]
     RustdocParsing(u32, String, anyhow::Error),
@@ -38,17 +38,28 @@ pub enum LoadingError {
     Other(#[from] anyhow::Error),
 }
 
-#[derive(Deserialize)]
-struct RustdocFormatVersion {
-    format_version: u32,
-}
-
 fn detect_rustdoc_format_version(path: &Path, file_data: &str) -> Result<u32, LoadingError> {
-    let version = serde_json::from_str::<RustdocFormatVersion>(file_data).map_err(|e| {
-        LoadingError::RustdocFormatDetection(path.display().to_string(), anyhow::Error::from(e))
-    })?;
+    // The last characters of a rustdoc file are always: ,"format_version":NUM}
+    let start = file_data
+        .rfind(",")
+        .ok_or_else(|| LoadingError::RustdocFormatDetection(path.display().to_string()))?;
+    let version_string: &str = &file_data[start..];
+    let sep_idx = version_string
+        .rfind(":")
+        .ok_or_else(|| LoadingError::RustdocFormatDetection(path.display().to_string()))?;
+    let final_idx = version_string
+        .rfind("}")
+        .ok_or_else(|| LoadingError::RustdocFormatDetection(path.display().to_string()))?;
 
-    Ok(version.format_version)
+    if !version_string[..sep_idx].ends_with("\"format_version\"") {
+        return Err(LoadingError::RustdocFormatDetection(
+            path.display().to_string(),
+        ));
+    }
+
+    version_string[sep_idx + 1..final_idx]
+        .parse::<u32>()
+        .map_err(|_| LoadingError::RustdocFormatDetection(path.display().to_string()))
 }
 
 fn parse_or_report_error<T>(
