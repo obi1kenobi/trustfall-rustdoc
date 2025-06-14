@@ -1,6 +1,42 @@
 use std::{collections::BTreeMap, env, path::Path};
 
-use handlebars::Handlebars;
+use handlebars::{handlebars_helper, Handlebars};
+use serde_json::Value;
+
+// a helper to return only `<= cutoff` elements from the list of numbers
+handlebars_helper!(map_lte: |args: Value, cutoff: i64| {
+    if let Value::Array(arr) = args {
+        Value::Array(
+            arr
+                .iter()
+                .map(|x| {
+                    x.as_i64().expect("non-number included")
+                })
+                .filter(|num| *num <= cutoff)
+                .map(Into::into)
+                .collect::<Vec<_>>()
+            )
+    } else {
+        unreachable!("non-array value provided: {args:?}")
+    }
+});
+
+// a helper to return only `> cutoff` elements from the list of numbers
+handlebars_helper!(map_ge: |args: Value, cutoff: i64| {
+    if let Value::Array(arr) = args {
+        Value::Array(arr
+            .iter()
+            .map(|x| {
+                x.as_i64().expect("non-number included")
+            })
+            .filter(|num| *num > cutoff)
+            .map(Into::into)
+            .collect::<Vec<_>>()
+        )
+    } else {
+        unreachable!("non-array value provided: {args:?}")
+    }
+});
 
 fn main() {
     let versions: Vec<i64> = env::args()
@@ -12,6 +48,10 @@ fn main() {
         })
         .collect();
     let mut handlebars = Handlebars::new();
+    handlebars.set_strict_mode(true);
+    handlebars.register_helper("map_lte", Box::new(map_lte));
+    handlebars.register_helper("map_ge", Box::new(map_ge));
+
     let mut args = BTreeMap::new();
     args.insert("version_numbers", versions.as_slice());
 
