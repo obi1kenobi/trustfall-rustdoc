@@ -6,16 +6,15 @@ use serde_json::Value;
 // a helper to return only `<= cutoff` elements from the list of numbers
 handlebars_helper!(map_lte: |args: Value, cutoff: i64| {
     if let Value::Array(arr) = args {
-        Value::Array(
-            arr
-                .iter()
-                .map(|x| {
-                    x.as_i64().expect("non-number included")
-                })
-                .filter(|num| *num <= cutoff)
-                .map(Into::into)
-                .collect::<Vec<_>>()
-            )
+        Value::Array(arr
+            .iter()
+            .map(|x| {
+                x.as_i64().expect("non-number included")
+            })
+            .filter(|num| *num <= cutoff)
+            .map(Into::into)
+            .collect::<Vec<_>>()
+        )
     } else {
         unreachable!("non-array value provided: {args:?}")
     }
