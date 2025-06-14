@@ -109,22 +109,22 @@ impl VersionedStorage {
 }
 
 impl<'a> VersionedIndex<'a> {
-    pub fn from_storage(storage: &'a VersionedStorage) -> Self {
+    pub fn from_storage(storage: &'a VersionedStorage, target_triple: &str) -> Self {
         match storage {
             #[cfg(feature = "v37")]
-            VersionedStorage::V37(s) => {
-                Self::V37(trustfall_rustdoc_adapter_v37::PackageIndex::from_storage(s))
-            }
+            VersionedStorage::V37(s) => Self::V37(
+                trustfall_rustdoc_adapter_v37::PackageIndex::from_storage(s, target_triple),
+            ),
 
             #[cfg(feature = "v39")]
-            VersionedStorage::V39(s) => {
-                Self::V39(trustfall_rustdoc_adapter_v39::PackageIndex::from_storage(s))
-            }
+            VersionedStorage::V39(s) => Self::V39(
+                trustfall_rustdoc_adapter_v39::PackageIndex::from_storage(s, target_triple),
+            ),
 
             #[cfg(feature = "v43")]
-            VersionedStorage::V43(s) => {
-                Self::V43(trustfall_rustdoc_adapter_v43::PackageIndex::from_storage(s))
-            }
+            VersionedStorage::V43(s) => Self::V43(
+                trustfall_rustdoc_adapter_v43::PackageIndex::from_storage(s, target_triple),
+            ),
 
             #[cfg(feature = "v45")]
             VersionedStorage::V45(s) => {
