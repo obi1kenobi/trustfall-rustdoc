@@ -1,6 +1,6 @@
 [package]
 name = "trustfall_rustdoc"
-version = "0.25.0"
+version = "0.26.0"
 edition = "2021"
 authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
 license = "Apache-2.0 OR MIT"
@@ -24,17 +24,15 @@ trustfall-rustdoc-adapter-v37 = { package = "trustfall-rustdoc-adapter", version
 trustfall-rustdoc-adapter-v39 = { package = "trustfall-rustdoc-adapter", version = ">=39.2.0,<39.3.0", optional = true }
 trustfall-rustdoc-adapter-v43 = { package = "trustfall-rustdoc-adapter", version = ">=43.1.0,<43.2.0", optional = true }
 trustfall-rustdoc-adapter-v45 = { package = "trustfall-rustdoc-adapter", version = ">=45.1.0,<45.2.0", optional = true }
-trustfall-rustdoc-adapter-v46 = { package = "trustfall-rustdoc-adapter", version = ">=46.1.0,<46.2.0", optional = true }
 trustfall-rustdoc-adapter-v48 = { package = "trustfall-rustdoc-adapter", version = ">=48.0.0,<48.1.0", optional = true }
 
 [features]
-default = ["v37", "v39", "v43", "v45", "v46", "v48"]
+default = ["v37", "v39", "v43", "v45", "v48"]
 rayon = [
     "trustfall-rustdoc-adapter-v37?/rayon",
     "trustfall-rustdoc-adapter-v39?/rayon",
     "trustfall-rustdoc-adapter-v43?/rayon",
     "trustfall-rustdoc-adapter-v45?/rayon",
-    "trustfall-rustdoc-adapter-v46?/rayon",
     "trustfall-rustdoc-adapter-v48?/rayon",
 ]
 rustc-hash = [
@@ -42,7 +40,6 @@ rustc-hash = [
     "trustfall-rustdoc-adapter-v39?/rustc-hash",
     "trustfall-rustdoc-adapter-v43?/rustc-hash",
     "trustfall-rustdoc-adapter-v45?/rustc-hash",
-    "trustfall-rustdoc-adapter-v46?/rustc-hash",
     "trustfall-rustdoc-adapter-v48?/rustc-hash",
 ]
 # Keep this list of rustdoc version-specific features at the bottom,
@@ -51,5 +48,4 @@ v37 = ["dep:trustfall-rustdoc-adapter-v37"]
 v39 = ["dep:trustfall-rustdoc-adapter-v39"]
 v43 = ["dep:trustfall-rustdoc-adapter-v43"]
 v45 = ["dep:trustfall-rustdoc-adapter-v45"]
-v46 = ["dep:trustfall-rustdoc-adapter-v46"]
 v48 = ["dep:trustfall-rustdoc-adapter-v48"]

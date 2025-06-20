@@ -131,9 +131,6 @@ jobs:
       - name: test rustdoc v45
         run: cargo test --no-default-features --features v45
 
-      - name: test rustdoc v46
-        run: cargo test --no-default-features --features v46
-
       - name: test rustdoc v48
         run: cargo test --no-default-features --features v48
 
