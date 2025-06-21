@@ -9,6 +9,7 @@ mod parser;
 mod query;
 mod versioned;
 
+use versioned::supported_versions;
 pub use {
     parser::load_rustdoc,
     versioned::{VersionedIndex, VersionedRustdocAdapter, VersionedStorage},
@@ -29,7 +30,8 @@ pub enum LoadingError {
     #[error("failed to parse rustdoc JSON format v{0} file: {1}")]
     RustdocParsing(u32, String, anyhow::Error),
 
-    #[error("unsupported rustdoc format v{0} for file: {1}")]
+    #[error("unsupported rustdoc format v{0} for file: {1}\n(supported formats are {list})",
+        list = supported_versions().iter().map(|v| format!("v{v}")).collect::<Vec<_>>().join(", "))]
     UnsupportedFormat(u32, String),
 
     #[error("unexpected error: {0}")]

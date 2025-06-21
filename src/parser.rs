@@ -1,6 +1,9 @@
 use std::{fs::File, io::Read, path::Path};
 
-use crate::{versioned::VersionedStorage, LoadingError};
+use crate::{
+    versioned::{supported_versions, VersionedStorage},
+    LoadingError,
+};
 
 pub fn load_rustdoc(
     path: &Path,
@@ -19,7 +22,7 @@ pub fn load_rustdoc(
 
     let format_version = super::detect_rustdoc_format_version(path, &file_data)?;
 
-    match format_version {
+    let result = match format_version {
         #[cfg(feature = "v37")]
         37 => {
             let rustdoc: trustfall_rustdoc_adapter_v37::Crate =
@@ -100,9 +103,14 @@ pub fn load_rustdoc(
             }
         }
 
-        _ => Err(LoadingError::UnsupportedFormat(
-            format_version,
-            path.display().to_string(),
-        )),
-    }
+        other => {
+            debug_assert!(!supported_versions().contains(&other));
+            Err(LoadingError::UnsupportedFormat(
+                format_version,
+                path.display().to_string(),
+            ))
+        }
+    };
+    debug_assert!(result.is_err() || supported_versions().contains(&format_version));
+    result
 }
