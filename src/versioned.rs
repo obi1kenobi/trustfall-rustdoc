@@ -271,3 +271,18 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
     add_version_method!();
 }
+
+pub(crate) fn supported_versions() -> &'static [u32] {
+    &[
+        #[cfg(feature = "v37")]
+        37,
+        #[cfg(feature = "v39")]
+        39,
+        #[cfg(feature = "v43")]
+        43,
+        #[cfg(feature = "v45")]
+        45,
+        #[cfg(feature = "v48")]
+        48,
+    ]
+}

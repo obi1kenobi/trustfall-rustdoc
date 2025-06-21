@@ -144,3 +144,12 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
     add_version_method!();
 }
+
+pub(crate) fn supported_versions() -> &'static [u32] {
+    &[
+        {{#each version_numbers}}
+        #[cfg(feature = "v{{this}}")]
+        {{this}},
+        {{/each}}
+    ]
+}
