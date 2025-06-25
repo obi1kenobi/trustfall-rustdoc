@@ -12,8 +12,6 @@
 # - all supported format version numbers are enabled as default features
 # - the list of default features is sorted in increasing order
 
-NEXT_VERSION_NUMBER="$1"
-
 # Fail on first error, on undefined variables, and on failures in pipelines.
 set -euxo pipefail
 

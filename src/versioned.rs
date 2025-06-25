@@ -19,8 +19,8 @@ macro_rules! add_version_method {
                 #[cfg(feature = "v45")]
                 Self::V45(..) => 45,
 
-                #[cfg(feature = "v48")]
-                Self::V48(..) => 48,
+                #[cfg(feature = "v53")]
+                Self::V53(..) => 53,
             }
         }
     };
@@ -41,8 +41,8 @@ pub enum VersionedStorage {
     #[cfg(feature = "v45")]
     V45(trustfall_rustdoc_adapter_v45::PackageStorage),
 
-    #[cfg(feature = "v48")]
-    V48(trustfall_rustdoc_adapter_v48::PackageStorage),
+    #[cfg(feature = "v53")]
+    V53(trustfall_rustdoc_adapter_v53::PackageStorage),
 }
 
 #[non_exhaustive]
@@ -60,8 +60,8 @@ pub enum VersionedIndex<'a> {
     #[cfg(feature = "v45")]
     V45(trustfall_rustdoc_adapter_v45::PackageIndex<'a>),
 
-    #[cfg(feature = "v48")]
-    V48(trustfall_rustdoc_adapter_v48::PackageIndex<'a>),
+    #[cfg(feature = "v53")]
+    V53(trustfall_rustdoc_adapter_v53::PackageIndex<'a>),
 }
 
 #[non_exhaustive]
@@ -78,8 +78,8 @@ pub enum VersionedRustdocAdapter<'a> {
     #[cfg(feature = "v45")]
     V45(Schema, trustfall_rustdoc_adapter_v45::RustdocAdapter<'a>),
 
-    #[cfg(feature = "v48")]
-    V48(Schema, trustfall_rustdoc_adapter_v48::RustdocAdapter<'a>),
+    #[cfg(feature = "v53")]
+    V53(Schema, trustfall_rustdoc_adapter_v53::RustdocAdapter<'a>),
 }
 
 impl VersionedStorage {
@@ -100,8 +100,8 @@ impl VersionedStorage {
             #[cfg(feature = "v45")]
             VersionedStorage::V45(s) => s.crate_version(),
 
-            #[cfg(feature = "v48")]
-            VersionedStorage::V48(s) => s.crate_version(),
+            #[cfg(feature = "v53")]
+            VersionedStorage::V53(s) => s.crate_version(),
         }
     }
 
@@ -131,9 +131,9 @@ impl<'a> VersionedIndex<'a> {
                 Self::V45(trustfall_rustdoc_adapter_v45::PackageIndex::from_storage(s))
             }
 
-            #[cfg(feature = "v48")]
-            VersionedStorage::V48(s) => {
-                Self::V48(trustfall_rustdoc_adapter_v48::PackageIndex::from_storage(s))
+            #[cfg(feature = "v53")]
+            VersionedStorage::V53(s) => {
+                Self::V53(trustfall_rustdoc_adapter_v53::PackageIndex::from_storage(s))
             }
         }
     }
@@ -219,20 +219,20 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 ))
             }
 
-            #[cfg(feature = "v48")]
-            (VersionedIndex::V48(c), Some(VersionedIndex::V48(b))) => {
-                let adapter = trustfall_rustdoc_adapter_v48::RustdocAdapter::new(c, Some(b));
-                Ok(VersionedRustdocAdapter::V48(
-                    trustfall_rustdoc_adapter_v48::RustdocAdapter::schema(),
+            #[cfg(feature = "v53")]
+            (VersionedIndex::V53(c), Some(VersionedIndex::V53(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v53::RustdocAdapter::new(c, Some(b));
+                Ok(VersionedRustdocAdapter::V53(
+                    trustfall_rustdoc_adapter_v53::RustdocAdapter::schema(),
                     adapter,
                 ))
             }
 
-            #[cfg(feature = "v48")]
-            (VersionedIndex::V48(c), None) => {
-                let adapter = trustfall_rustdoc_adapter_v48::RustdocAdapter::new(c, None);
-                Ok(VersionedRustdocAdapter::V48(
-                    trustfall_rustdoc_adapter_v48::RustdocAdapter::schema(),
+            #[cfg(feature = "v53")]
+            (VersionedIndex::V53(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v53::RustdocAdapter::new(c, None);
+                Ok(VersionedRustdocAdapter::V53(
+                    trustfall_rustdoc_adapter_v53::RustdocAdapter::schema(),
                     adapter,
                 ))
             }
@@ -262,8 +262,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
             #[cfg(feature = "v45")]
             VersionedRustdocAdapter::V45(schema, ..) => schema,
 
-            #[cfg(feature = "v48")]
-            VersionedRustdocAdapter::V48(schema, ..) => schema,
+            #[cfg(feature = "v53")]
+            VersionedRustdocAdapter::V53(schema, ..) => schema,
         }
     }
 
