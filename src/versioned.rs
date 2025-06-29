@@ -282,7 +282,7 @@ pub(crate) fn supported_versions() -> &'static [u32] {
         43,
         #[cfg(feature = "v45")]
         45,
-        #[cfg(feature = "v48")]
-        48,
+        #[cfg(feature = "v53")]
+        53,
     ]
 }
