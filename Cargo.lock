@@ -265,26 +265,6 @@ checksum = "583034fd73374156e66797ed8e5b0d5690409c9226b22d87cb7f19821c05d152"
 
 [[package]]
 name = "rustdoc-types"
-version = "0.33.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e33060dbec9e1d13d285c4cddc150a431569be97f33bf0b6c1ec6eea934c31ca"
-dependencies = [
- "rustc-hash",
- "serde",
-]
-
-[[package]]
-name = "rustdoc-types"
-version = "0.35.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf583db9958b3161d7980a56a8ee3c25e1a40708b81259be72584b7e0ea07c95"
-dependencies = [
- "rustc-hash",
- "serde",
-]
-
-[[package]]
-name = "rustdoc-types"
 version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e3b61d5673c3f4b49d35be6a58c49210596f61b8db580bc3b6d9dee5e9dc5458"
@@ -477,36 +457,6 @@ dependencies = [
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "37.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "50bcd58aa0f20d46509514e8572958350b1beb4d10b005d6a9053a79bc0c2dbb"
-dependencies = [
- "cargo_metadata",
- "cargo_toml",
- "rayon",
- "rust-target-feature-data",
- "rustc-hash",
- "rustdoc-types 0.33.0",
- "trustfall",
-]
-
-[[package]]
-name = "trustfall-rustdoc-adapter"
-version = "39.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6e84c4655131a9f3b08b7e48d25067f20971ca4f49104b79ef01337a11048bd"
-dependencies = [
- "cargo_metadata",
- "cargo_toml",
- "rayon",
- "rust-target-feature-data",
- "rustc-hash",
- "rustdoc-types 0.35.0",
- "trustfall",
-]
-
-[[package]]
-name = "trustfall-rustdoc-adapter"
 version = "43.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b1931350ab17c5f3492b521fb8b9fdfd802b5f0178f526a9528eadfd3ab4036"
@@ -586,8 +536,6 @@ dependencies = [
  "serde_json",
  "thiserror 2.0.12",
  "trustfall",
- "trustfall-rustdoc-adapter 37.5.0",
- "trustfall-rustdoc-adapter 39.3.0",
  "trustfall-rustdoc-adapter 43.2.0",
  "trustfall-rustdoc-adapter 45.2.0",
  "trustfall-rustdoc-adapter 53.1.0",
