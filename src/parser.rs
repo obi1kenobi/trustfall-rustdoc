@@ -22,38 +22,6 @@ pub fn load_rustdoc(
     let format_version = super::detect_rustdoc_format_version(path, &file_data)?;
 
     match format_version {
-        #[cfg(feature = "v37")]
-        37 => {
-            let rustdoc: trustfall_rustdoc_adapter_v37::Crate =
-                super::parse_or_report_error(path, &file_data, format_version)?;
-            match package {
-                Some(package) => Ok(VersionedStorage::V37(
-                    trustfall_rustdoc_adapter_v37::PackageStorage::from_rustdoc_and_package(
-                        rustdoc, package,
-                    ),
-                )),
-                None => Ok(VersionedStorage::V37(
-                    trustfall_rustdoc_adapter_v37::PackageStorage::from_rustdoc(rustdoc),
-                )),
-            }
-        }
-
-        #[cfg(feature = "v39")]
-        39 => {
-            let rustdoc: trustfall_rustdoc_adapter_v39::Crate =
-                super::parse_or_report_error(path, &file_data, format_version)?;
-            match package {
-                Some(package) => Ok(VersionedStorage::V39(
-                    trustfall_rustdoc_adapter_v39::PackageStorage::from_rustdoc_and_package(
-                        rustdoc, package,
-                    ),
-                )),
-                None => Ok(VersionedStorage::V39(
-                    trustfall_rustdoc_adapter_v39::PackageStorage::from_rustdoc(rustdoc),
-                )),
-            }
-        }
-
         #[cfg(feature = "v43")]
         43 => {
             let rustdoc: trustfall_rustdoc_adapter_v43::Crate =
