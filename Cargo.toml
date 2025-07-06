@@ -1,7 +1,7 @@
 [package]
 name = "trustfall_rustdoc"
 version = "0.28.0"
-edition = "2021"
+edition = "2024"
 authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
 license = "Apache-2.0 OR MIT"
 description = "Run Trustfall queries across multiple rustdoc JSON format versions."

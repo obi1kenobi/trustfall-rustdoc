@@ -1,6 +1,6 @@
 use std::{collections::BTreeMap, env, path::Path};
 
-use handlebars::{handlebars_helper, Handlebars};
+use handlebars::{Handlebars, handlebars_helper};
 use serde_json::Value;
 
 // a helper to return only `<= cutoff` elements from the list of numbers

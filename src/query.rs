@@ -2,7 +2,7 @@
 
 use std::{collections::BTreeMap, sync::Arc};
 
-use trustfall::{execute_query, FieldValue};
+use trustfall::{FieldValue, execute_query};
 
 use crate::versioned::VersionedRustdocAdapter;
 
