@@ -2,7 +2,7 @@
 
 use std::{fs::File, io::Read, path::Path};
 
-use crate::{versioned::VersionedStorage, LoadingError};
+use crate::{LoadingError, versioned::VersionedStorage};
 
 pub fn load_rustdoc(
     path: &Path,
