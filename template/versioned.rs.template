@@ -42,7 +42,7 @@ pub enum VersionedRustdocAdapter<'a> {
     {{#each version_numbers}}
     #[cfg(feature = "v{{this}}")]
     V{{this}}(
-        Schema,
+        &'static Schema,
         trustfall_rustdoc_adapter_v{{this}}::RustdocAdapter<'a>,
     ),
 
