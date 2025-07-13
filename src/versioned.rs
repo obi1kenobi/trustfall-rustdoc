@@ -51,13 +51,22 @@ pub enum VersionedIndex<'a> {
 #[non_exhaustive]
 pub enum VersionedRustdocAdapter<'a> {
     #[cfg(feature = "v43")]
-    V43(Schema, trustfall_rustdoc_adapter_v43::RustdocAdapter<'a>),
+    V43(
+        &'static Schema,
+        trustfall_rustdoc_adapter_v43::RustdocAdapter<'a>,
+    ),
 
     #[cfg(feature = "v45")]
-    V45(Schema, trustfall_rustdoc_adapter_v45::RustdocAdapter<'a>),
+    V45(
+        &'static Schema,
+        trustfall_rustdoc_adapter_v45::RustdocAdapter<'a>,
+    ),
 
     #[cfg(feature = "v53")]
-    V53(Schema, trustfall_rustdoc_adapter_v53::RustdocAdapter<'a>),
+    V53(
+        &'static Schema,
+        trustfall_rustdoc_adapter_v53::RustdocAdapter<'a>,
+    ),
 }
 
 impl VersionedStorage {
