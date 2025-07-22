@@ -28,7 +28,11 @@ impl<'a> VersionedRustdocAdapter<'a> {
         query: Arc<trustfall_core::ir::IndexedQuery>,
         vars: BTreeMap<K, V>,
     ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
-        let vars = Arc::new(vars.into_iter().map(|(k, v)| (k.into(), v.into())).collect());
+        let vars = Arc::new(
+            vars.into_iter()
+                .map(|(k, v)| (k.into(), v.into()))
+                .collect(),
+        );
 
         match self {
             {{#each version_numbers}}
