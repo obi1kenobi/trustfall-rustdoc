@@ -90,7 +90,7 @@ fn get_package_metadata(
     let package_candidates = metadata
         .packages
         .into_iter()
-        .filter(|p| p.name == dependency_name);
+        .filter(|p| p.name.as_str() == dependency_name);
 
     let mut package_candidates: Box<dyn Iterator<Item = _>> = if let Some(path) = dependency_path {
         // We're using a path dependency.
