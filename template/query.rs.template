@@ -22,4 +22,30 @@ impl<'a> VersionedRustdocAdapter<'a> {
             {{/each}}
         }
     }
+
+    pub fn run_query_with_indexed_query<'slf: 'a, K: Into<Arc<str>>, V: Into<FieldValue>>(
+        &'slf self,
+        query: Arc<trustfall_core::ir::IndexedQuery>,
+        vars: BTreeMap<K, V>,
+    ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
+        let vars = Arc::new(
+            vars.into_iter()
+                .map(|(k, v)| (k.into(), v.into()))
+                .collect(),
+        );
+
+        match self {
+            {{#each version_numbers}}
+            #[cfg(feature = "v{{this}}")]
+            VersionedRustdocAdapter::V{{this}}(_, adapter) => {
+                Ok(trustfall_core::interpreter::execution::interpret_ir(
+                    Arc::new(adapter),
+                    query,
+                    vars,
+                )?)
+            }
+
+            {{/each}}
+        }
+    }
 }

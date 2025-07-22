@@ -36,4 +36,54 @@ impl<'a> VersionedRustdocAdapter<'a> {
             }
         }
     }
+
+    pub fn run_query_with_indexed_query<'slf: 'a, K: Into<Arc<str>>, V: Into<FieldValue>>(
+        &'slf self,
+        query: Arc<trustfall_core::ir::IndexedQuery>,
+        vars: BTreeMap<K, V>,
+    ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
+        let vars = Arc::new(
+            vars.into_iter()
+                .map(|(k, v)| (k.into(), v.into()))
+                .collect(),
+        );
+
+        match self {
+            #[cfg(feature = "v43")]
+            VersionedRustdocAdapter::V43(_, adapter) => {
+                Ok(trustfall_core::interpreter::execution::interpret_ir(
+                    Arc::new(adapter),
+                    query,
+                    vars,
+                )?)
+            }
+
+            #[cfg(feature = "v45")]
+            VersionedRustdocAdapter::V45(_, adapter) => {
+                Ok(trustfall_core::interpreter::execution::interpret_ir(
+                    Arc::new(adapter),
+                    query,
+                    vars,
+                )?)
+            }
+
+            #[cfg(feature = "v53")]
+            VersionedRustdocAdapter::V53(_, adapter) => {
+                Ok(trustfall_core::interpreter::execution::interpret_ir(
+                    Arc::new(adapter),
+                    query,
+                    vars,
+                )?)
+            }
+
+            #[cfg(feature = "v54")]
+            VersionedRustdocAdapter::V54(_, adapter) => {
+                Ok(trustfall_core::interpreter::execution::interpret_ir(
+                    Arc::new(adapter),
+                    query,
+                    vars,
+                )?)
+            }
+        }
+    }
 }
