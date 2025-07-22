@@ -823,6 +823,7 @@ dependencies = [
  "trustfall-rustdoc-adapter 45.3.0",
  "trustfall-rustdoc-adapter 53.2.0",
  "trustfall-rustdoc-adapter 54.1.0",
+ "trustfall_core",
 ]
 
 [[package]]
