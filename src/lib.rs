@@ -174,13 +174,13 @@ mod tests {
         let test_path = PathBuf::from("");
         match detect_rustdoc_format_version(&test_path, fast_file_data) {
             Ok(version_num) => assert_eq!(version_num, 10),
-            Err(e) => panic!("Format version detection failed with error {}", e),
+            Err(err) => panic!("Format version detection failed with error {err}"),
         }
 
         let slow_file_data = r#"{"format_version":10,"test":10}"#;
         match detect_rustdoc_format_version(&test_path, slow_file_data) {
             Ok(version_num) => assert_eq!(version_num, 10),
-            Err(e) => panic!("Format version detection failed with error {}", e),
+            Err(err) => panic!("Format version detection failed with error {err}"),
         }
     }
 }
