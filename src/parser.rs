@@ -70,18 +70,18 @@ pub fn load_rustdoc(
             }
         }
 
-        #[cfg(feature = "v54")]
-        54 => {
-            let rustdoc: trustfall_rustdoc_adapter_v54::Crate =
+        #[cfg(feature = "v55")]
+        55 => {
+            let rustdoc: trustfall_rustdoc_adapter_v55::Crate =
                 super::parse_or_report_error(path, &file_data, format_version)?;
             match package {
-                Some(package) => Ok(VersionedStorage::V54(
-                    trustfall_rustdoc_adapter_v54::PackageStorage::from_rustdoc_and_package(
+                Some(package) => Ok(VersionedStorage::V55(
+                    trustfall_rustdoc_adapter_v55::PackageStorage::from_rustdoc_and_package(
                         rustdoc, package,
                     ),
                 )),
-                None => Ok(VersionedStorage::V54(
-                    trustfall_rustdoc_adapter_v54::PackageStorage::from_rustdoc(rustdoc),
+                None => Ok(VersionedStorage::V55(
+                    trustfall_rustdoc_adapter_v55::PackageStorage::from_rustdoc(rustdoc),
                 )),
             }
         }
