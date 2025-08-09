@@ -30,8 +30,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 execute_query(self.schema(), Arc::new(adapter), query, vars)
             }
 
-            #[cfg(feature = "v54")]
-            VersionedRustdocAdapter::V54(_, adapter) => {
+            #[cfg(feature = "v55")]
+            VersionedRustdocAdapter::V55(_, adapter) => {
                 execute_query(self.schema(), Arc::new(adapter), query, vars)
             }
         }
@@ -76,8 +76,8 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 )?)
             }
 
-            #[cfg(feature = "v54")]
-            VersionedRustdocAdapter::V54(_, adapter) => {
+            #[cfg(feature = "v55")]
+            VersionedRustdocAdapter::V55(_, adapter) => {
                 Ok(trustfall_core::interpreter::execution::interpret_ir(
                     Arc::new(adapter),
                     query,
