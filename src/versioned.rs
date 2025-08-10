@@ -9,9 +9,6 @@ macro_rules! add_version_method {
     () => {
         pub fn version(&self) -> u32 {
             match self {
-                #[cfg(feature = "v43")]
-                Self::V43(..) => 43,
-
                 #[cfg(feature = "v45")]
                 Self::V45(..) => 45,
 
@@ -28,9 +25,6 @@ macro_rules! add_version_method {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum VersionedStorage {
-    #[cfg(feature = "v43")]
-    V43(trustfall_rustdoc_adapter_v43::PackageStorage),
-
     #[cfg(feature = "v45")]
     V45(trustfall_rustdoc_adapter_v45::PackageStorage),
 
@@ -44,9 +38,6 @@ pub enum VersionedStorage {
 #[non_exhaustive]
 #[derive(Debug)]
 pub enum VersionedIndex<'a> {
-    #[cfg(feature = "v43")]
-    V43(trustfall_rustdoc_adapter_v43::PackageIndex<'a>),
-
     #[cfg(feature = "v45")]
     V45(trustfall_rustdoc_adapter_v45::PackageIndex<'a>),
 
@@ -59,12 +50,6 @@ pub enum VersionedIndex<'a> {
 
 #[non_exhaustive]
 pub enum VersionedRustdocAdapter<'a> {
-    #[cfg(feature = "v43")]
-    V43(
-        &'static Schema,
-        trustfall_rustdoc_adapter_v43::RustdocAdapter<'a>,
-    ),
-
     #[cfg(feature = "v45")]
     V45(
         &'static Schema,
@@ -90,9 +75,6 @@ impl VersionedStorage {
     /// This is the version listed in the `Cargo.toml` of the crate, not its rustdoc format version.
     pub fn crate_version(&self) -> Option<&str> {
         match self {
-            #[cfg(feature = "v43")]
-            VersionedStorage::V43(s) => s.crate_version(),
-
             #[cfg(feature = "v45")]
             VersionedStorage::V45(s) => s.crate_version(),
 
@@ -108,13 +90,8 @@ impl VersionedStorage {
 }
 
 impl<'a> VersionedIndex<'a> {
-    pub fn from_storage(storage: &'a VersionedStorage, target_triple: &str) -> Self {
+    pub fn from_storage(storage: &'a VersionedStorage) -> Self {
         match storage {
-            #[cfg(feature = "v43")]
-            VersionedStorage::V43(s) => Self::V43(
-                trustfall_rustdoc_adapter_v43::PackageIndex::from_storage(s, target_triple),
-            ),
-
             #[cfg(feature = "v45")]
             VersionedStorage::V45(s) => {
                 Self::V45(trustfall_rustdoc_adapter_v45::PackageIndex::from_storage(s))
@@ -141,24 +118,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
         baseline: Option<&'a VersionedIndex<'a>>,
     ) -> anyhow::Result<Self> {
         match (current, baseline) {
-            #[cfg(feature = "v43")]
-            (VersionedIndex::V43(c), Some(VersionedIndex::V43(b))) => {
-                let adapter = trustfall_rustdoc_adapter_v43::RustdocAdapter::new(c, Some(b));
-                Ok(VersionedRustdocAdapter::V43(
-                    trustfall_rustdoc_adapter_v43::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
-            #[cfg(feature = "v43")]
-            (VersionedIndex::V43(c), None) => {
-                let adapter = trustfall_rustdoc_adapter_v43::RustdocAdapter::new(c, None);
-                Ok(VersionedRustdocAdapter::V43(
-                    trustfall_rustdoc_adapter_v43::RustdocAdapter::schema(),
-                    adapter,
-                ))
-            }
-
             #[cfg(feature = "v45")]
             (VersionedIndex::V45(c), Some(VersionedIndex::V45(b))) => {
                 let adapter = trustfall_rustdoc_adapter_v45::RustdocAdapter::new(c, Some(b));
@@ -226,9 +185,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
     pub fn schema(&self) -> &Schema {
         match self {
-            #[cfg(feature = "v43")]
-            VersionedRustdocAdapter::V43(schema, ..) => schema,
-
             #[cfg(feature = "v45")]
             VersionedRustdocAdapter::V45(schema, ..) => schema,
 
@@ -245,8 +201,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
 pub(crate) fn supported_versions() -> &'static [u32] {
     &[
-        #[cfg(feature = "v43")]
-        43,
         #[cfg(feature = "v45")]
         45,
         #[cfg(feature = "v53")]

@@ -67,19 +67,9 @@ impl VersionedStorage {
 }
 
 impl<'a> VersionedIndex<'a> {
-    pub fn from_storage(
-        storage: &'a VersionedStorage,
-        target_triple: &str,
-    ) -> Self {
+    pub fn from_storage(storage: &'a VersionedStorage) -> Self {
         match storage {
-            {{#each (map_lte version_numbers 43)}}
-            #[cfg(feature = "v{{this}}")]
-            VersionedStorage::V{{this}}(s) => Self::V{{this}}(
-                trustfall_rustdoc_adapter_v{{this}}::PackageIndex::from_storage(s, target_triple),
-            ),
-
-            {{/each}}
-            {{#each (map_ge version_numbers 43)}}
+            {{#each version_numbers}}
             #[cfg(feature = "v{{this}}")]
             VersionedStorage::V{{this}}(s) => Self::V{{this}}(
                 trustfall_rustdoc_adapter_v{{this}}::PackageIndex::from_storage(s),
