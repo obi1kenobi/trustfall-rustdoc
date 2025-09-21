@@ -15,11 +15,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
         vars: BTreeMap<K, V>,
     ) -> anyhow::Result<Box<dyn Iterator<Item = QueryResult> + 'a>> {
         match self {
-            #[cfg(feature = "v45")]
-            VersionedRustdocAdapter::V45(_, adapter) => {
-                execute_query(self.schema(), Arc::new(adapter), query, vars)
-            }
-
             #[cfg(feature = "v53")]
             VersionedRustdocAdapter::V53(_, adapter) => {
                 execute_query(self.schema(), Arc::new(adapter), query, vars)
@@ -49,15 +44,6 @@ impl<'a> VersionedRustdocAdapter<'a> {
         );
 
         match self {
-            #[cfg(feature = "v45")]
-            VersionedRustdocAdapter::V45(_, adapter) => {
-                Ok(trustfall_core::interpreter::execution::interpret_ir(
-                    Arc::new(adapter),
-                    query,
-                    vars,
-                )?)
-            }
-
             #[cfg(feature = "v53")]
             VersionedRustdocAdapter::V53(_, adapter) => {
                 Ok(trustfall_core::interpreter::execution::interpret_ir(
