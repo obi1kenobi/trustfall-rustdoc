@@ -78,7 +78,7 @@ jobs:
           persist-credentials: true
 
       - name: download from codegen job
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: rustdoc-update
 
