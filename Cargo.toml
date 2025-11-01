@@ -1,6 +1,6 @@
 [package]
 name = "trustfall_rustdoc"
-version = "0.35.0"
+version = "0.36.0"
 edition = "2024"
 authors = ["Predrag Gruevski <obi1kenobi82@gmail.com>"]
 license = "Apache-2.0 OR MIT"
@@ -16,14 +16,14 @@ serde_json = "1.0.143"
 # All of the packages below are in our public API,
 # so bumping major versions for any of them is a major breaking change.
 anyhow = "1.0.99"
-cargo_metadata = "0.22.0"
+cargo_metadata = "0.23.0"
 serde = { version = "1.0.219", features = ["derive"] }
 thiserror = "2.0.16"
 trustfall = "0.8.1"
 trustfall_core = "0.8.1"  # Keep to the same version as trustfall.
-trustfall-rustdoc-adapter-v53 = { package = "trustfall-rustdoc-adapter", version = ">=53.4.0,<53.5.0", optional = true }
-trustfall-rustdoc-adapter-v55 = { package = "trustfall-rustdoc-adapter", version = ">=55.2.0,<55.3.0", optional = true }
-trustfall-rustdoc-adapter-v56 = { package = "trustfall-rustdoc-adapter", version = ">=56.1.0,<56.2.0", optional = true }
+trustfall-rustdoc-adapter-v53 = { package = "trustfall-rustdoc-adapter", version = ">=53.5.0,<53.6.0", optional = true }
+trustfall-rustdoc-adapter-v55 = { package = "trustfall-rustdoc-adapter", version = ">=55.3.0,<55.4.0", optional = true }
+trustfall-rustdoc-adapter-v56 = { package = "trustfall-rustdoc-adapter", version = ">=56.2.0,<56.3.0", optional = true }
 
 [features]
 default = ["v53", "v55", "v56"]
