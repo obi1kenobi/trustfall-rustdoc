@@ -24,21 +24,25 @@ trustfall_core = "0.8.1"  # Keep to the same version as trustfall.
 trustfall-rustdoc-adapter-v53 = { package = "trustfall-rustdoc-adapter", version = ">=53.5.0,<53.6.0", optional = true }
 trustfall-rustdoc-adapter-v55 = { package = "trustfall-rustdoc-adapter", version = ">=55.3.0,<55.4.0", optional = true }
 trustfall-rustdoc-adapter-v56 = { package = "trustfall-rustdoc-adapter", version = ">=56.2.0,<56.3.0", optional = true }
+trustfall-rustdoc-adapter-v57 = { package = "trustfall-rustdoc-adapter", version = ">=57.0.0,<57.1.0", optional = true }
 
 [features]
-default = ["v53", "v55", "v56"]
+default = ["v53", "v55", "v56", "v57"]
 rayon = [
     "trustfall-rustdoc-adapter-v53?/rayon",
     "trustfall-rustdoc-adapter-v55?/rayon",
     "trustfall-rustdoc-adapter-v56?/rayon",
+    "trustfall-rustdoc-adapter-v57?/rayon",
 ]
 rustc-hash = [
     "trustfall-rustdoc-adapter-v53?/rustc-hash",
     "trustfall-rustdoc-adapter-v55?/rustc-hash",
     "trustfall-rustdoc-adapter-v56?/rustc-hash",
+    "trustfall-rustdoc-adapter-v57?/rustc-hash",
 ]
 # Keep this list of rustdoc version-specific features at the bottom,
 # to ensure our version-updating automation works correctly.
 v53 = ["dep:trustfall-rustdoc-adapter-v53"]
 v55 = ["dep:trustfall-rustdoc-adapter-v55"]
 v56 = ["dep:trustfall-rustdoc-adapter-v56"]
+v57 = ["dep:trustfall-rustdoc-adapter-v57"]

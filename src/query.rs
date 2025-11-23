@@ -29,6 +29,11 @@ impl<'a> VersionedRustdocAdapter<'a> {
             VersionedRustdocAdapter::V56(_, adapter) => {
                 execute_query(self.schema(), Arc::new(adapter), query, vars)
             }
+
+            #[cfg(feature = "v57")]
+            VersionedRustdocAdapter::V57(_, adapter) => {
+                execute_query(self.schema(), Arc::new(adapter), query, vars)
+            }
         }
     }
 
@@ -64,6 +69,15 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v56")]
             VersionedRustdocAdapter::V56(_, adapter) => {
+                Ok(trustfall_core::interpreter::execution::interpret_ir(
+                    Arc::new(adapter),
+                    query,
+                    vars,
+                )?)
+            }
+
+            #[cfg(feature = "v57")]
+            VersionedRustdocAdapter::V57(_, adapter) => {
                 Ok(trustfall_core::interpreter::execution::interpret_ir(
                     Arc::new(adapter),
                     query,

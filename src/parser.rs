@@ -70,6 +70,22 @@ pub fn load_rustdoc(
             }
         }
 
+        #[cfg(feature = "v57")]
+        57 => {
+            let rustdoc: trustfall_rustdoc_adapter_v57::Crate =
+                super::parse_or_report_error(path, &file_data, format_version)?;
+            match package {
+                Some(package) => Ok(VersionedStorage::V57(
+                    trustfall_rustdoc_adapter_v57::PackageStorage::from_rustdoc_and_package(
+                        rustdoc, package,
+                    ),
+                )),
+                None => Ok(VersionedStorage::V57(
+                    trustfall_rustdoc_adapter_v57::PackageStorage::from_rustdoc(rustdoc),
+                )),
+            }
+        }
+
         _ => Err(LoadingError::UnsupportedFormat(
             format_version,
             path.display().to_string(),
