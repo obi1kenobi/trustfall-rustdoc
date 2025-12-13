@@ -46,7 +46,7 @@ jobs:
           ./scripts/add_new_rustdoc_version.sh "$NEXT_FORMAT"
 
       - name: upload artifact for use in PR
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: rustdoc-update
           if-no-files-found: error
