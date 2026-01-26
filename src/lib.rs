@@ -9,10 +9,9 @@ mod parser;
 mod query;
 mod versioned;
 
-use versioned::supported_versions;
 pub use {
     parser::load_rustdoc,
-    versioned::{VersionedIndex, VersionedRustdocAdapter, VersionedStorage},
+    versioned::{supported_versions, VersionedIndex, VersionedRustdocAdapter, VersionedStorage},
 };
 
 #[derive(Deserialize)]

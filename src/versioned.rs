@@ -155,7 +155,7 @@ impl<'a> VersionedRustdocAdapter<'a> {
     add_version_method!();
 }
 
-pub(crate) fn supported_versions() -> &'static [u32] {
+pub fn supported_versions() -> &'static [u32] {
     &[
         #[cfg(feature = "v56")]
         56,
