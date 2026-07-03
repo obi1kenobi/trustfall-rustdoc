@@ -84,23 +84,13 @@ dependencies = [
 
 [[package]]
 name = "cargo_toml"
-version = "0.22.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "374b7c592d9c00c1f4972ea58390ac6b18cbb6ab79011f3bdc90a0b82ca06b77"
-dependencies = [
- "serde",
- "toml 0.9.5",
-]
-
-[[package]]
-name = "cargo_toml"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aa61aec073ec94791433ddf3df2323ff9d1711557c2a0eefb0f99cb4f8dca520"
 dependencies = [
  "semver",
  "serde",
- "toml 1.1.2+spec-1.1.0",
+ "toml",
 ]
 
 [[package]]
@@ -430,21 +420,6 @@ dependencies = [
 
 [[package]]
 name = "toml"
-version = "0.9.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75129e1dc5000bfbaa9fee9d1b21f974f9fbad9daec557a521ee6e080825f6e8"
-dependencies = [
- "indexmap",
- "serde",
- "serde_spanned",
- "toml_datetime 0.7.0",
- "toml_parser",
- "toml_writer",
- "winnow 0.7.13",
-]
-
-[[package]]
-name = "toml"
 version = "1.1.2+spec-1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81f3d15e84cbcd896376e6730314d59fb5a87f31e4b038454184435cd57defee"
@@ -452,19 +427,10 @@ dependencies = [
  "indexmap",
  "serde_core",
  "serde_spanned",
- "toml_datetime 1.1.1+spec-1.1.0",
+ "toml_datetime",
  "toml_parser",
  "toml_writer",
- "winnow 1.0.3",
-]
-
-[[package]]
-name = "toml_datetime"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bade1c3e902f58d73d3f294cd7f20391c1cb2fbcb643b73566bc773971df91e3"
-dependencies = [
- "serde",
+ "winnow",
 ]
 
 [[package]]
@@ -482,7 +448,7 @@ version = "1.1.2+spec-1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2abe9b86193656635d2411dc43050282ca48aa31c2451210f4202550afb7526"
 dependencies = [
- "winnow 1.0.3",
+ "winnow",
 ]
 
 [[package]]
@@ -504,12 +470,12 @@ dependencies = [
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "56.2.0"
+version = "56.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4d529f0bd5550f02cfc0a4b74384058a0ceff90b4b7f8bfff28353cc75548131"
+checksum = "51b6527fffe29ec0456f4ca5135b2eb33c3463bf336fafd54ecde198c4593a73"
 dependencies = [
  "cargo_metadata",
- "cargo_toml 0.22.3",
+ "cargo_toml",
  "indexmap",
  "rayon",
  "rustc-hash",
@@ -519,12 +485,12 @@ dependencies = [
 
 [[package]]
 name = "trustfall-rustdoc-adapter"
-version = "57.0.0"
+version = "57.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "52199a9faa87a0c40360bbfa2d0aa0aeea29e7ffda159fd91fead16f76a3e265"
+checksum = "61a48f46a8ee5b56fe9edf4f539d6eaa4fbbb0aa13da78e80366b5fac7a16009"
 dependencies = [
  "cargo_metadata",
- "cargo_toml 0.22.3",
+ "cargo_toml",
  "indexmap",
  "rayon",
  "rustc-hash",
@@ -539,7 +505,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "557031fcc0a5f7ac758f3d728a8f475460bc62c660f369b2f3d4cf3ab8f47b7f"
 dependencies = [
  "cargo_metadata",
- "cargo_toml 1.0.0",
+ "cargo_toml",
  "indexmap",
  "rayon",
  "rustc-hash",
@@ -585,8 +551,8 @@ dependencies = [
  "serde_json",
  "thiserror 2.0.16",
  "trustfall",
- "trustfall-rustdoc-adapter 56.2.0",
- "trustfall-rustdoc-adapter 57.0.0",
+ "trustfall-rustdoc-adapter 56.3.0",
+ "trustfall-rustdoc-adapter 57.1.0",
  "trustfall-rustdoc-adapter 60.0.0",
  "trustfall_core",
 ]
@@ -602,12 +568,6 @@ name = "unicode-ident"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5a5f39404a5da50712a4c1eecf25e90dd62b613502b7e925fd4e4d19b5c96512"
-
-[[package]]
-name = "winnow"
-version = "0.7.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21a0236b59786fed61e2a80582dd500fe61f18b5dca67a4a067d0bc9039339cf"
 
 [[package]]
 name = "winnow"
