@@ -109,6 +109,29 @@ impl<'a> VersionedIndex<'a> {
         }
     }
 
+    /// Build an index for Rust standard-library component rustdoc JSON.
+    ///
+    /// This opts into adapter-side standard-library stability rules. Use
+    /// [`Self::from_storage`] for ordinary crates.
+    pub fn from_rust_std_component_storage(storage: &'a VersionedStorage) -> Self {
+        match storage {
+            #[cfg(feature = "v56")]
+            VersionedStorage::V56(s) => Self::V56(
+                trustfall_rustdoc_adapter_v56::PackageIndex::from_rust_std_component_storage(s),
+            ),
+
+            #[cfg(feature = "v57")]
+            VersionedStorage::V57(s) => Self::V57(
+                trustfall_rustdoc_adapter_v57::PackageIndex::from_rust_std_component_storage(s),
+            ),
+
+            #[cfg(feature = "v60")]
+            VersionedStorage::V60(s) => Self::V60(
+                trustfall_rustdoc_adapter_v60::PackageIndex::from_rust_std_component_storage(s),
+            ),
+        }
+    }
+
     add_version_method!();
 }
 
