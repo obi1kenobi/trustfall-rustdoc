@@ -14,6 +14,9 @@ macro_rules! add_version_method {
 
                 #[cfg(feature = "v60")]
                 Self::V60(..) => 60,
+
+                #[cfg(feature = "v61")]
+                Self::V61(..) => 61,
             }
         }
     };
@@ -27,6 +30,9 @@ pub enum VersionedStorage {
 
     #[cfg(feature = "v60")]
     V60(trustfall_rustdoc_adapter_v60::PackageStorage),
+
+    #[cfg(feature = "v61")]
+    V61(trustfall_rustdoc_adapter_v61::PackageStorage),
 }
 
 #[non_exhaustive]
@@ -37,6 +43,9 @@ pub enum VersionedIndex<'a> {
 
     #[cfg(feature = "v60")]
     V60(trustfall_rustdoc_adapter_v60::PackageIndex<'a>),
+
+    #[cfg(feature = "v61")]
+    V61(trustfall_rustdoc_adapter_v61::PackageIndex<'a>),
 }
 
 #[non_exhaustive]
@@ -52,6 +61,12 @@ pub enum VersionedRustdocAdapter<'a> {
         &'static Schema,
         trustfall_rustdoc_adapter_v60::RustdocAdapter<'a>,
     ),
+
+    #[cfg(feature = "v61")]
+    V61(
+        &'static Schema,
+        trustfall_rustdoc_adapter_v61::RustdocAdapter<'a>,
+    ),
 }
 
 impl VersionedStorage {
@@ -65,6 +80,9 @@ impl VersionedStorage {
 
             #[cfg(feature = "v60")]
             VersionedStorage::V60(s) => s.crate_version(),
+
+            #[cfg(feature = "v61")]
+            VersionedStorage::V61(s) => s.crate_version(),
         }
     }
 
@@ -83,6 +101,11 @@ impl<'a> VersionedIndex<'a> {
             VersionedStorage::V60(s) => {
                 Self::V60(trustfall_rustdoc_adapter_v60::PackageIndex::from_storage(s))
             }
+
+            #[cfg(feature = "v61")]
+            VersionedStorage::V61(s) => {
+                Self::V61(trustfall_rustdoc_adapter_v61::PackageIndex::from_storage(s))
+            }
         }
     }
 
@@ -100,6 +123,11 @@ impl<'a> VersionedIndex<'a> {
             #[cfg(feature = "v60")]
             VersionedStorage::V60(s) => Self::V60(
                 trustfall_rustdoc_adapter_v60::PackageIndex::from_rust_std_component_storage(s),
+            ),
+
+            #[cfg(feature = "v61")]
+            VersionedStorage::V61(s) => Self::V61(
+                trustfall_rustdoc_adapter_v61::PackageIndex::from_rust_std_component_storage(s),
             ),
         }
     }
@@ -149,6 +177,24 @@ impl<'a> VersionedRustdocAdapter<'a> {
                 ))
             }
 
+            #[cfg(feature = "v61")]
+            (VersionedIndex::V61(c), Some(VersionedIndex::V61(b))) => {
+                let adapter = trustfall_rustdoc_adapter_v61::RustdocAdapter::new(c, Some(b));
+                Ok(VersionedRustdocAdapter::V61(
+                    trustfall_rustdoc_adapter_v61::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
+            #[cfg(feature = "v61")]
+            (VersionedIndex::V61(c), None) => {
+                let adapter = trustfall_rustdoc_adapter_v61::RustdocAdapter::new(c, None);
+                Ok(VersionedRustdocAdapter::V61(
+                    trustfall_rustdoc_adapter_v61::RustdocAdapter::schema(),
+                    adapter,
+                ))
+            }
+
             #[allow(unreachable_patterns)]
             (c, Some(b)) => {
                 bail!(
@@ -167,6 +213,9 @@ impl<'a> VersionedRustdocAdapter<'a> {
 
             #[cfg(feature = "v60")]
             VersionedRustdocAdapter::V60(schema, ..) => schema,
+
+            #[cfg(feature = "v61")]
+            VersionedRustdocAdapter::V61(schema, ..) => schema,
         }
     }
 
@@ -179,5 +228,7 @@ pub(crate) fn supported_versions() -> &'static [u32] {
         57,
         #[cfg(feature = "v60")]
         60,
+        #[cfg(feature = "v61")]
+        61,
     ]
 }
