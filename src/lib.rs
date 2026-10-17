@@ -27,13 +27,13 @@ pub enum LoadingError {
     MetadataParsing(String),
 
     #[error("failed to read rustdoc JSON file: {0}")]
-    RustdocIoError(String, std::io::Error),
+    RustdocIoError(String, #[source] std::io::Error),
 
     #[error("unable to detect rustdoc 'format_version' key in file: {0}")]
-    RustdocFormatDetection(String, anyhow::Error),
+    RustdocFormatDetection(String, #[source] anyhow::Error),
 
     #[error("failed to parse rustdoc JSON format v{0} file: {1}")]
-    RustdocParsing(u32, String, anyhow::Error),
+    RustdocParsing(u32, String, #[source] anyhow::Error),
 
     #[error("unsupported rustdoc format v{0} for file: {1}\n(supported formats are {list})",
         list = supported_versions().iter().map(|v| format!("v{v}")).collect::<Vec<_>>().join(", "))]
